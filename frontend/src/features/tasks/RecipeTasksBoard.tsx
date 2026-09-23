@@ -1,5 +1,6 @@
 import { type DragEvent, type FormEvent, type ReactNode, useEffect, useMemo, useState } from 'react';
 import { Panel } from '../../components/Panel';
+import { IconSurfaceSettingsHost } from '../icon-settings/IconSurfaceSettingsHost';
 import { createRecipeTask, deleteRecipeTask, listRecipeTasks, listUsers, reorderRecipeTasks, updateRecipeTask, updateRecipeTaskBoardMode } from '../../services/api';
 import { AuthUser, RecipeTask, RecipeTaskBoardMode, RecipeTaskPriority, RecipeTaskStatus } from '../../types';
 import { applyTaskTextTemplate, defaultTaskTemplate, loadTaskDefaultTemplate, RecipeTaskDefaultTemplate, saveTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from './taskDefaults';
@@ -757,6 +758,7 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRec
   return (
     <div className="tasks-workspace">
       <Panel title="Задачи" subtitle={statusText} className="tasks-panel">
+        <IconSurfaceSettingsHost surfaceId="tasks" title="Настроить иконки задач">
         <div className="tasks-toolbar">
           <div className="inline-actions">
             <button type="button" onClick={() => {
@@ -852,6 +854,7 @@ export function RecipeTasksBoard({ authUser, itemOptions, prefillItem, onOpenRec
           })}
         </div>
         {renderEditModal()}
+        </IconSurfaceSettingsHost>
       </Panel>
     </div>
   );

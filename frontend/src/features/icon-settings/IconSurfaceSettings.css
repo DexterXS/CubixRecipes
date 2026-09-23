@@ -1,0 +1,179 @@
+.icon-settings-surface {
+  position: relative;
+  min-width: 0;
+}
+
+.icon-settings-trigger {
+  position: absolute;
+  z-index: 8;
+  top: 6px;
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel-bg) 88%, var(--accent));
+  color: var(--text);
+  cursor: pointer;
+  opacity: .78;
+  transition: opacity .16s ease, transform .16s ease, border-color .16s ease;
+}
+
+.icon-settings-trigger:hover,
+.icon-settings-trigger:focus-visible,
+.icon-settings-trigger[aria-expanded='true'] {
+  opacity: 1;
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.icon-settings-trigger:focus-visible,
+.icon-settings-dialog button:focus-visible,
+.icon-settings-dialog input:focus-visible,
+.icon-settings-dialog select:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 72%, white);
+  outline-offset: 2px;
+}
+
+.icon-settings-surface[data-icon-surface='nei'] .nei-icon,
+.icon-settings-surface[data-icon-surface='favorites'] .favorite-icon,
+.icon-settings-surface[data-icon-surface='draftItems'] .nei-icon,
+.icon-settings-surface[data-icon-surface='draftSelected'] .draft-selected-icon,
+.icon-settings-surface[data-icon-surface='tasks'] .task-icon-slot,
+.icon-settings-surface[data-icon-surface='tasks'] .task-item-picker-icon,
+.icon-settings-surface[data-icon-surface='tasks'] .suggestion-icon-slot,
+.icon-settings-surface[data-icon-surface='auctionPreview'] .auction-day-auction-preview,
+.icon-settings-surface[data-icon-surface='auctionPreview'] .auction-lot-main-icon,
+.icon-settings-surface[data-icon-surface='auctionLotItems'] .auction-lot-item-icon,
+.icon-settings-surface[data-icon-surface='auctionLotItems'] .auction-lot-preview-slot,
+.icon-settings-surface[data-icon-surface='auctionLotItems'] .auction-inventory-slot,
+.icon-settings-surface[data-icon-surface='auctionLotItems'] .auction-item-icon,
+.icon-settings-surface[data-icon-surface='auctionNei'] .auction-lot-nei-grid button,
+.icon-settings-surface[data-icon-surface='touchHeld'] .touch-held-item-icon,
+.icon-settings-surface[data-icon-surface='mobileInspection'] .mobile-item-inspection {
+  box-sizing: border-box;
+  padding: var(--icon-surface-padding);
+  border-width: var(--icon-surface-border-width);
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  overflow: var(--icon-surface-overflow);
+}
+
+.icon-settings-surface[data-icon-surface='craftGrid'] .grid-row,
+.icon-settings-surface[data-icon-surface='craftGrid9'] .grid-row,
+.icon-settings-surface[data-icon-surface='cubixCraftGrid'] .grid-row {
+  column-gap: var(--icon-surface-gap-x) !important;
+  row-gap: var(--icon-surface-gap-y) !important;
+}
+
+.icon-settings-surface[data-icon-surface='craftGrid'] .group-row-start,
+.icon-settings-surface[data-icon-surface='craftGrid9'] .group-row-start,
+.icon-settings-surface[data-icon-surface='cubixCraftGrid'] .group-row-start {
+  margin-top: var(--icon-surface-group-row-gap);
+}
+
+.icon-settings-surface[data-icon-surface='craftGrid'] .group-col-start,
+.icon-settings-surface[data-icon-surface='craftGrid9'] .group-col-start,
+.icon-settings-surface[data-icon-surface='cubixCraftGrid'] .group-col-start {
+  margin-left: var(--icon-surface-group-column-gap);
+}
+
+.icon-settings-surface[data-icon-surface='nei'] .nei-list,
+.icon-settings-surface[data-icon-surface='favorites'] .favorite-items,
+.icon-settings-surface[data-icon-surface='draftItems'] .draft-group-items,
+.icon-settings-surface[data-icon-surface='auctionNei'] .auction-lot-nei-grid {
+  column-gap: var(--icon-surface-gap-x) !important;
+  row-gap: var(--icon-surface-gap-y) !important;
+}
+
+.icon-settings-surface[data-icon-surface='nei'] img,
+.icon-settings-surface[data-icon-surface='favorites'] img,
+.icon-settings-surface[data-icon-surface='draftItems'] img,
+.icon-settings-surface[data-icon-surface='craftGrid'] img,
+.icon-settings-surface[data-icon-surface='craftGrid9'] img,
+.icon-settings-surface[data-icon-surface='cubixCraftGrid'] img,
+.icon-settings-surface[data-icon-surface='tasks'] img,
+.icon-settings-surface[data-icon-surface='auctionPreview'] img,
+.icon-settings-surface[data-icon-surface='auctionLotItems'] img,
+.icon-settings-surface[data-icon-surface='auctionNei'] img {
+  image-rendering: var(--icon-surface-smoothing);
+}
+
+.icon-settings-dialog {
+  width: min(760px, calc(100vw - 32px));
+  max-width: min(760px, calc(100vw - 32px));
+  max-height: min(820px, calc(100vh - 32px));
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--border));
+  border-radius: 16px;
+  background: var(--panel-bg);
+  color: var(--text);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .48);
+}
+
+.icon-settings-dialog::backdrop {
+  background: rgba(4, 9, 18, .7);
+  backdrop-filter: blur(3px);
+}
+
+.icon-settings-dialog.is-mobile {
+  width: 100%;
+  max-width: none;
+  max-height: min(92vh, 820px);
+  margin: auto 0 0;
+  border-radius: 18px 18px 0 0;
+}
+
+.icon-settings-dialog-card { display: grid; min-height: 0; }
+.icon-settings-dialog-header,
+.icon-settings-dialog-footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.icon-settings-dialog-footer {
+  align-items: center;
+  border-top: 1px solid var(--border);
+  border-bottom: 0;
+  flex-wrap: wrap;
+}
+
+.icon-settings-dialog-header h2 { margin: 2px 0 4px; font-size: 20px; }
+.icon-settings-dialog-header p { margin: 0; color: var(--muted); font-size: 13px; }
+.icon-settings-eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; }
+.icon-settings-close { min-width: 40px; min-height: 40px; padding: 0; font-size: 24px; line-height: 1; }
+.icon-settings-dialog-body { overflow: auto; padding: 18px 20px; }
+.icon-settings-live-preview { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 12px; margin-bottom: 16px; }
+.icon-settings-live-preview > strong { align-self: end; }
+.icon-settings-live-preview > span { color: var(--muted); font-size: 12px; }
+.icon-settings-preview-surface { width: var(--icon-settings-preview-cell); height: var(--icon-settings-preview-cell); display: grid; place-items: center; box-sizing: border-box; padding: var(--icon-settings-preview-padding); border: max(2px, var(--icon-settings-preview-border)) solid #6d7890; border-radius: 8px; background: #1a2437; overflow: hidden; }
+.icon-settings-preview-icon { display: grid; place-items: center; width: var(--icon-settings-preview-icon); height: var(--icon-settings-preview-icon); font-size: 32px; overflow: hidden; }
+.icon-settings-control-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.icon-settings-control-group { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: color-mix(in srgb, var(--field-bg) 48%, transparent); }
+.icon-settings-control-group h3 { margin: 0; font-size: 14px; }
+.icon-settings-field { display: grid; grid-template-columns: minmax(105px, 1fr) minmax(110px, 1.4fr) auto; align-items: center; gap: 8px; font-size: 12px; }
+.icon-settings-field select { min-width: 0; }
+.icon-settings-range-field output { min-width: 42px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.icon-settings-two-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.icon-settings-two-columns .icon-settings-field { grid-template-columns: 1fr auto; }
+.icon-settings-two-columns .icon-settings-field input { grid-column: 1 / -1; grid-row: 2; width: 100%; }
+.icon-settings-checks { display: grid; gap: 8px; color: var(--muted); font-size: 12px; }
+.icon-settings-checks label { display: flex; gap: 8px; align-items: flex-start; }
+.icon-settings-error { margin: 0 20px 14px; padding: 10px 12px; border: 1px solid #d85b6d; border-radius: 8px; color: #ffadb8; background: rgba(180, 50, 70, .16); }
+.icon-settings-footer-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.icon-settings-saved-hint { color: var(--muted); font-size: 11px; }
+
+@media (max-width: 720px) {
+  .icon-settings-trigger { width: 40px; height: 40px; min-width: 40px; border-radius: 10px; }
+  .icon-settings-dialog { width: 100%; max-width: none; max-height: 94vh; margin: auto 0 0; border-radius: 18px 18px 0 0; }
+  .icon-settings-control-groups { grid-template-columns: 1fr; }
+  .icon-settings-dialog-header, .icon-settings-dialog-footer { padding: 16px; }
+  .icon-settings-dialog-body { padding: 16px; }
+  .icon-settings-field { grid-template-columns: minmax(100px, 1fr) minmax(120px, 1.5fr) auto; }
+}

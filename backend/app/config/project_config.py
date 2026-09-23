@@ -294,6 +294,17 @@ class ProjectConfigService:
                 'cell': self._clamp_int(value.get('cell', 34), 8, 160, 34),
                 'icon': self._clamp_int(value.get('icon', 28), 4, 128, 28),
                 'gap': self._clamp_int(value.get('gap', 4), 0, 32, 4),
+                'gapX': self._clamp_int(value.get('gapX', value.get('gap', 4)), 0, 32, 4),
+                'gapY': self._clamp_int(value.get('gapY', value.get('gap', 4)), 0, 32, 4),
+                'padding': self._clamp_int(value.get('padding', 0), 0, 32, 0),
+                'borderWidth': self._clamp_int(value.get('borderWidth', 0), 0, 8, 0),
+                'spriteScale': self._clamp_float(value.get('spriteScale', 1.0), 0.5, 2.5, 1.0),
+                'offsetX': self._clamp_int(value.get('offsetX', 0), -32, 32, 0),
+                'offsetY': self._clamp_int(value.get('offsetY', 0), -32, 32, 0),
+                'overflow': str(value.get('overflow', 'visible') or 'visible') if str(value.get('overflow', 'visible') or 'visible') in {'clip', 'visible', 'scroll'} else 'visible',
+                'smoothing': str(value.get('smoothing', 'pixelated') or 'pixelated') if str(value.get('smoothing', 'pixelated') or 'pixelated') in {'pixelated', 'smooth'} else 'pixelated',
+                'groupRows': bool(value.get('groupRows', False)),
+                'groupColumns': bool(value.get('groupColumns', False)),
                 'mode': mode,
             }
         return result
@@ -355,6 +366,13 @@ class ProjectConfigService:
     def _clamp_int(self, value: Any, minimum: int, maximum: int, fallback: int) -> int:
         try:
             parsed = int(value)
+        except (TypeError, ValueError):
+            parsed = fallback
+        return max(minimum, min(parsed, maximum))
+
+    def _clamp_float(self, value: Any, minimum: float, maximum: float, fallback: float) -> float:
+        try:
+            parsed = float(value)
         except (TypeError, ValueError):
             parsed = fallback
         return max(minimum, min(parsed, maximum))

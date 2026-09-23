@@ -1,5 +1,6 @@
 import { auctionCurrencies, getAuctionBaseItemPrice } from './auctionCommands';
 import type { AuctionCommandStage, AuctionCurrency, AuctionDayFolder, AuctionDraft, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionState, AuctionUiMode } from './auctionTypes';
+import { IconSurfaceSettingsHost } from '../icon-settings/IconSurfaceSettingsHost';
 import './AuctionLotWorkspace.css';
 
 type AuctionLotWorkspaceProps = {
@@ -90,6 +91,7 @@ export function AuctionLotWorkspace({
       </div>
 
       <div className="auction-lot-layout">
+        <IconSurfaceSettingsHost surfaceId="auctionPreview" title="Настроить превью лота">
         <aside className="auction-lot-preview">
           <div className="auction-lot-id">#{auction.id}</div>
           <h2>{auction.name}</h2>
@@ -110,7 +112,9 @@ export function AuctionLotWorkspace({
             {!auction.items.length ? <span className="auction-lot-preview-empty">Предметы не добавлены</span> : null}
           </div>
         </aside>
+        </IconSurfaceSettingsHost>
 
+        <IconSurfaceSettingsHost surfaceId="auctionLotItems" title="Настроить предметы лота">
         <section className="auction-lot-content">
           <div className="auction-lot-section-title">
             <h3>Содержимое лота</h3>
@@ -141,6 +145,7 @@ export function AuctionLotWorkspace({
             {selectedAuctionFull ? <div className="inline-status inline-status-warning">Лимит предметов заполнен: {auction.items.length}/{maxItemsPerAuction}</div> : null}
           </div>
         </section>
+        </IconSurfaceSettingsHost>
 
         <aside className="auction-lot-control">
           <h3>Управление аукционом</h3>
@@ -177,6 +182,7 @@ export function AuctionLotWorkspace({
           {nbtCount ? <div className="inline-hint inline-hint-warning">NBT-предметов в лоте: {nbtCount}. Они не попадут в /give.</div> : null}
         </aside>
 
+        <IconSurfaceSettingsHost surfaceId="auctionNei" title="Настроить NEI аукциона">
         <aside className="auction-lot-nei">
           <div className="auction-lot-section-title">
             <h3>NEI — каталог предметов</h3>
@@ -204,6 +210,7 @@ export function AuctionLotWorkspace({
             ))}
           </div>
         </aside>
+        </IconSurfaceSettingsHost>
       </div>
     </section>
   );

@@ -2,6 +2,7 @@ import { type CSSProperties, type ReactNode, useEffect, useMemo, useState } from
 
 import { Panel } from '../../components/Panel';
 import { RecipeGrid } from '../../components/RecipeGrid';
+import { IconSurfaceSettingsHost } from '../icon-settings/IconSurfaceSettingsHost';
 import type { DisplayMode, ItemPanelAtlas, RecipeDraftTemplate } from '../../types';
 
 export type DraftItemAvailability = 'available' | 'missing' | 'unknown';
@@ -238,6 +239,7 @@ export function DraftsWorkspace({
               <strong>{draftItemPage + 1}/{draftItemPageCount}</strong>
               <button type="button" className="ghost-button icon-button" aria-label="draft-items-next-page" disabled={draftItemPage >= draftItemPageCount - 1} onClick={() => onChangeDraftPage(1)}>›</button>
             </div>
+            <IconSurfaceSettingsHost surfaceId="draftItems" title="Настроить иконки черновиков">
             <div className="draft-item-list" aria-label="draft-item-list">
               {draftItemEntries.length === 0 ? (
                 <div className="draft-empty-state">Нет сохранённых шаблонов.</div>
@@ -285,6 +287,7 @@ export function DraftsWorkspace({
                 );
               })}
             </div>
+            </IconSurfaceSettingsHost>
             {selectedItemRaws.length ? (
               <div className="draft-selection-bar" aria-label="draft-cloud-selection-bar">
                 <strong aria-label="draft-selected-count">Выбрано: {selectedItemRaws.length}</strong>
@@ -306,7 +309,9 @@ export function DraftsWorkspace({
           <Panel title="Шаблоны" subtitle={selectedDraftItemRaw ?? 'Выберите предмет'} className="draft-templates-panel">
             {selectedDraftItemRaw ? (
               <div className="draft-selected-item">
-                <span className="output-icon-slot draft-selected-icon">{renderCraftItemIcon(selectedDraftItemRaw, undefined, false, 1, selectedTitle)}</span>
+                <IconSurfaceSettingsHost surfaceId="draftSelected" title="Настроить выбранный предмет">
+                  <span className="output-icon-slot draft-selected-icon">{renderCraftItemIcon(selectedDraftItemRaw, undefined, false, 1, selectedTitle)}</span>
+                </IconSurfaceSettingsHost>
                 <div>
                   <strong>{selectedTitle}</strong>
                   <span>{selectedDraftItemRaw}</span>
@@ -333,9 +338,11 @@ export function DraftsWorkspace({
                         <button type="button" className="secondary-button draft-template-edit" aria-label="edit-selected-draft-template" onClick={() => onOpenDraft(activeDraftPreview)}>Редактировать рецепт</button>
                       </div>
                     </div>
-                    <div className="draft-preview-grid">
-                      <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={displayMode} animationsEnabled={animationsEnabled} editorMode="view" tooltipsDisabled extremeGroupGap={3} heldItemRaw={null} resolveCellTitle={resolveCellTitle} resolveIconStyle={resolveRecipeGridIconStyle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
-                    </div>
+                    <IconSurfaceSettingsHost surfaceId={activeGridMode === '9' ? 'draftPreview9' : 'draftPreview'} title="Настроить превью черновика">
+                      <div className="draft-preview-grid">
+                        <RecipeGrid matrix={activeDraftPreview.recipe.matrix} atlas={itemPanelAtlas} atlasImageUrl={draftPreviewAtlasUrl} displayMode={displayMode} animationsEnabled={animationsEnabled} editorMode="view" tooltipsDisabled extremeGroupGap={3} heldItemRaw={null} resolveCellTitle={resolveCellTitle} resolveIconStyle={resolveRecipeGridIconStyle} onItemHover={() => undefined} onCellClick={() => undefined} onCellContextMenu={() => undefined} onCellChange={() => undefined} />
+                      </div>
+                    </IconSurfaceSettingsHost>
                   </div>
                 ) : null}
                 <div className="draft-template-list-shell">

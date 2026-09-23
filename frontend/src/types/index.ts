@@ -57,11 +57,24 @@ export interface WorkspaceLayout {
 }
 
 export type IconCenterMode = 'grid' | 'absolute' | 'wrapper' | 'scale';
+export type IconOverflowMode = 'clip' | 'visible' | 'scroll';
+export type IconSmoothingMode = 'pixelated' | 'smooth';
 
 export interface IconSurfaceSettings {
   cell: number;
   icon: number;
   gap: number;
+  gapX: number;
+  gapY: number;
+  padding: number;
+  borderWidth: number;
+  spriteScale: number;
+  offsetX: number;
+  offsetY: number;
+  overflow: IconOverflowMode;
+  smoothing: IconSmoothingMode;
+  groupRows: boolean;
+  groupColumns: boolean;
   mode: IconCenterMode;
 }
 

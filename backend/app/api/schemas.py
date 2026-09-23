@@ -201,6 +201,17 @@ class IconSurfaceRequest(BaseModel):
     cell: int = Field(default=34, ge=8, le=160)
     icon: int = Field(default=28, ge=4, le=128)
     gap: int = Field(default=4, ge=0, le=32)
+    gapX: int | None = Field(default=None, ge=0, le=32)
+    gapY: int | None = Field(default=None, ge=0, le=32)
+    padding: int = Field(default=0, ge=0, le=32)
+    borderWidth: int = Field(default=0, ge=0, le=8)
+    spriteScale: float = Field(default=1.0, ge=0.5, le=2.5)
+    offsetX: int = Field(default=0, ge=-32, le=32)
+    offsetY: int = Field(default=0, ge=-32, le=32)
+    overflow: Literal['clip', 'visible', 'scroll'] = 'visible'
+    smoothing: Literal['pixelated', 'smooth'] = 'pixelated'
+    groupRows: bool = False
+    groupColumns: bool = False
     mode: Literal['grid', 'absolute', 'wrapper', 'scale'] = 'scale'
 
 

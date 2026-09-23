@@ -16,6 +16,8 @@ import type { AuctionItemOption } from '../features/auctions/auctionTypes';
 import { AppSettingsModal } from '../features/settings/AppSettingsModal';
 import { IconScaleLab } from '../features/icon-lab/IconScaleLab';
 import { IconSettingsPanel } from '../features/icon-settings/IconSettingsPanel';
+import { IconSurfaceSettingsHost } from '../features/icon-settings/IconSurfaceSettingsHost';
+import { IconSurfaceSettingsProvider } from '../features/icon-settings/IconSurfaceSettingsContext';
 import { defaultIconSurfaceSettings, defaultMobileIconSurfaceSettings, normalizeIconSurfaceSettings, patchIconSurfaceSettings, type IconSurfaceId, type IconSurfaceSettings } from '../features/icon-settings/iconSurfaces';
 import { useIconSurfaceCssVars } from '../features/icon-settings/useIconViewport';
 import { ItemTextureToolsPanel, type ItemPanelModSummary } from '../features/item-catalog/ItemTextureToolsPanel';
@@ -3295,6 +3297,34 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     persistUiPreferences({ ...latestUiPreferencesRef.current, ...patch });
   }
 
+  function applyIconSurfaceLive(profile: IconSettingsProfile, surfaces: Record<string, IconSurfaceSettings>) {
+    const next: UiPreferences = profile === 'mobile'
+      ? { ...latestUiPreferencesRef.current, mobile_icon_surfaces: surfaces }
+      : { ...latestUiPreferencesRef.current, icon_surfaces: surfaces };
+    latestUiPreferencesRef.current = next;
+    setUiPreferences(next);
+  }
+
+  async function saveIconSurfaceProfile(profile: IconSettingsProfile, surfaces: Record<string, IconSurfaceSettings>) {
+    if (persistTimerRef.current !== null) {
+      window.clearTimeout(persistTimerRef.current);
+      persistTimerRef.current = null;
+    }
+    const next: UiPreferences = profile === 'mobile'
+      ? { ...latestUiPreferencesRef.current, mobile_icon_surfaces: surfaces }
+      : { ...latestUiPreferencesRef.current, icon_surfaces: surfaces };
+    latestUiPreferencesRef.current = next;
+    setUiPreferences(next);
+    const response = await updateProjectUiPreferences(next);
+    const normalized = normalizeUiPreferences(response);
+    latestUiPreferencesRef.current = normalized;
+    setUiPreferences(normalized);
+    setSettings((current) => ({ ...(current ?? response), ...response }));
+    setBackendAvailable(true);
+    setSaveStatus('Настройки иконок сохранены');
+    setStatus('Настройки иконок сохранены глобально');
+  }
+
   function patchIconSurface(surfaceId: IconSurfaceId, next: IconSurfaceSettings) {
     if (iconSettingsProfile === 'mobile') {
       patchUiPreferences({
@@ -5740,6 +5770,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
           <div className="grid-meta"><span>{t('status.size')}</span><strong>{summary}</strong><span>{t('fields.parsedCells')}</span><strong>{filledCells}</strong><span>{t('fields.nullCells')}</span><strong>{nullCells}</strong></div>
           {heldItemRaw ? (
+            <IconSurfaceSettingsHost surfaceId="touchHeld" title="Настроить предмет под пальцем">
             <div className="touch-held-item-bar" aria-label="touch-held-item">
               <span className="touch-held-item-icon" aria-hidden="true">
                 {renderHeldItemIcon(heldItemRaw)}
@@ -5757,7 +5788,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 x
               </button>
             </div>
+            </IconSurfaceSettingsHost>
           ) : null}
+          <IconSurfaceSettingsHost surfaceId={gridSize === 9 ? 'craftGrid9' : 'craftGrid'} title="Настроить сетку крафта">
           <div className="grid-scroll-zone recipe-builder-grid">
             <div className="recipe-craft-board">
               <details className="craft-board-menu" data-close-on-select>
@@ -5864,6 +5897,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 }}
               />
               <div className="craft-arrow" aria-hidden="true" />
+              <IconSurfaceSettingsHost surfaceId="craftOutput" title="Настроить слот результата">
               <button
                 type="button"
                 className="output-icon-slot output-icon-button craft-output-slot"
@@ -5901,6 +5935,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 {renderCraftItemIcon(outputRaw, recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}
                 {outputRaw ? renderItemTooltip(outputRaw) : null}
               </button>
+              </IconSurfaceSettingsHost>
               <div className="craft-recipe-nav" aria-label="craft-recipe-navigation">
                 <button
                   type="button"
@@ -5922,6 +5957,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
               </div>
             </div>
           </div>
+          </IconSurfaceSettingsHost>
         </Panel>
       </div>
     );
@@ -6142,21 +6178,23 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     }
     const activeTab = activeNeiFavoriteTab();
     return (
-      <NeiFavoritesPanel
-        profile={neiFavorites}
-        activeTab={activeTab}
-        status={neiFavoritesStatus}
-        hiddenPatternsDraft={neiHiddenPatternsDraft}
-        newTabName={newFavoriteTabName}
-        renderFavoriteItem={renderNeiFavoriteItem}
-        onSelectTab={setActiveFavoriteTab}
-        onRenameActiveTab={renameActiveFavoriteTab}
-        onNewTabNameChange={setNewFavoriteTabName}
-        onAddTab={addFavoriteTab}
-        onDeleteActiveTab={deleteActiveFavoriteTab}
-        onFavoriteHotkeyChange={updateFavoriteHotkey}
-        onHiddenPatternsChange={updateNeiHiddenPatterns}
-      />
+      <IconSurfaceSettingsHost surfaceId="favorites" title="Настроить иконки избранного">
+        <NeiFavoritesPanel
+          profile={neiFavorites}
+          activeTab={activeTab}
+          status={neiFavoritesStatus}
+          hiddenPatternsDraft={neiHiddenPatternsDraft}
+          newTabName={newFavoriteTabName}
+          renderFavoriteItem={renderNeiFavoriteItem}
+          onSelectTab={setActiveFavoriteTab}
+          onRenameActiveTab={renameActiveFavoriteTab}
+          onNewTabNameChange={setNewFavoriteTabName}
+          onAddTab={addFavoriteTab}
+          onDeleteActiveTab={deleteActiveFavoriteTab}
+          onFavoriteHotkeyChange={updateFavoriteHotkey}
+          onHiddenPatternsChange={updateNeiHiddenPatterns}
+        />
+      </IconSurfaceSettingsHost>
     );
   }
 
@@ -6164,17 +6202,18 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     return (
       <div className="workspace-panel-shell panel-nei">
         <Panel title="NEI предметы" subtitle="Поиск и перетаскивание в рецепт" className="nei-panel">
-          <input aria-label="nei-search" type="search" value={neiSearchQuery} onChange={(event) => setNeiSearchQuery(event.target.value)} placeholder="Поиск предмета, mod:item или ID" />
-          <div className="nei-pager" aria-label="nei-pagination">
-            <button type="button" className="ghost-button icon-button" aria-label="nei-prev-page" disabled={neiPage <= 0} onClick={() => changeNeiPage(-1)}>‹</button>
-            <strong>{neiPage + 1}/{neiPageCount}</strong>
-            <button type="button" className="ghost-button icon-button" aria-label="nei-next-page" disabled={neiPage >= neiPageCount - 1} onClick={() => changeNeiPage(1)}>›</button>
-          </div>
-          <div
-            ref={neiListRef}
-            className="nei-list"
-            aria-label="nei-items"
-          >
+          <IconSurfaceSettingsHost surfaceId="nei" title="Настроить сетку NEI">
+            <input aria-label="nei-search" type="search" value={neiSearchQuery} onChange={(event) => setNeiSearchQuery(event.target.value)} placeholder="Поиск предмета, mod:item или ID" />
+            <div className="nei-pager" aria-label="nei-pagination">
+              <button type="button" className="ghost-button icon-button" aria-label="nei-prev-page" disabled={neiPage <= 0} onClick={() => changeNeiPage(-1)}>‹</button>
+              <strong>{neiPage + 1}/{neiPageCount}</strong>
+              <button type="button" className="ghost-button icon-button" aria-label="nei-next-page" disabled={neiPage >= neiPageCount - 1} onClick={() => changeNeiPage(1)}>›</button>
+            </div>
+            <div
+              ref={neiListRef}
+              className="nei-list"
+              aria-label="nei-items"
+            >
             {neiItems.map((entry) => {
               const raw = itemPanelRaw(entry);
               let insertRaw = applyItemCaseAlias(raw);
@@ -6244,7 +6283,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
                 </NeiIconItem>
               );
             })}
-          </div>
+            </div>
+          </IconSurfaceSettingsHost>
         </Panel>
       </div>
     );
@@ -8061,6 +8101,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     : null;
 
   return (
+    <IconSurfaceSettingsProvider
+      desktopSettings={uiPreferences.icon_surfaces}
+      mobileSettings={uiPreferences.mobile_icon_surfaces}
+      canEdit={canManageSettings}
+      onLiveChange={(profile, surfaces) => applyIconSurfaceLive(profile, surfaces)}
+      onSave={(profile, surfaces) => saveIconSurfaceProfile(profile, surfaces)}
+      renderSampleIcon={() => renderCraftItemIcon(outputRaw || '<minecraft:stone>', recipe.output_resolution?.icon_url, recipe.output_resolution?.animated, recipe.output_resolution?.animation_meta?.frametime, outputDisplayName ?? outputRaw)}
+    >
     <main className={`app-shell theme-${uiPreferences.theme_mode} density-${uiPreferences.density_mode} mode-${uiPreferences.editor_mode} columns-${uiPreferences.workspace_layout.columns} ${uiPreferences.workspace_layout.compact_header ? 'compact-header' : ''}`} style={getAppShellStyle()} onMouseDownCapture={handleHeldItemOutsideMouseDown} onContextMenuCapture={handleHeldItemContextMenu}>
       <div className="utility-bar">
         <MobileAppMenu
@@ -8307,5 +8355,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         </div>
       ) : null}
     </main>
+    </IconSurfaceSettingsProvider>
   );
 }

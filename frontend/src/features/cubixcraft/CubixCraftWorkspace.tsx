@@ -8,9 +8,10 @@ import {
   getModIconAtlasManifest,
   getProjectSettings,
   listZsCloudFiles,
+  updateProjectUiPreferences,
   uploadZsCloudFile
 } from '../../services/api';
-import type { ItemCatalogEntry, ItemPanelAtlas, ModIconAtlasManifest, ZsCloudFile } from '../../types';
+import type { ItemCatalogEntry, ItemPanelAtlas, ModIconAtlasManifest, ProjectSettings, UiPreferences, ZsCloudFile } from '../../types';
 import { createAtlasLookup, hasBackendZipRegistry } from '../../services/atlas/atlasLookup';
 import type { AtlasV2Index } from '../../services/atlas/types';
 import { buildModIconCandidates } from '../../services/atlas/modIconMatching';
@@ -22,7 +23,9 @@ import {
   type IconSurfaceSettings,
   type IconSurfaceSettingsMap
 } from '../icon-settings/iconSurfaces';
-import { useIconViewport } from '../icon-settings/useIconViewport';
+import { IconSurfaceSettingsHost } from '../icon-settings/IconSurfaceSettingsHost';
+import { IconSurfaceSettingsProvider, type IconSettingsProfile } from '../icon-settings/IconSurfaceSettingsContext';
+import { useIconSurfaceCssVars, useIconViewport } from '../icon-settings/useIconViewport';
 
 type CubixCell = {
   raw: string;
@@ -292,6 +295,7 @@ export function CubixCraftWorkspace() {
   const [cloudSelection, setCloudSelection] = useState('');
   const [desktopIconSettings, setDesktopIconSettings] = useState<Partial<Record<string, Partial<IconSurfaceSettings>>> | null>(null);
   const [mobileIconSettings, setMobileIconSettings] = useState<Partial<Record<string, Partial<IconSurfaceSettings>>> | null>(null);
+  const [projectUiPreferences, setProjectUiPreferences] = useState<UiPreferences | null>(null);
   const [search, setSearch] = useState('');
   const [recipeSearch, setRecipeSearch] = useState('');
   const [heldRaw, setHeldRaw] = useState<string | null>(null);
@@ -325,6 +329,7 @@ export function CubixCraftWorkspace() {
         setAtlas(atlasResponse);
         setModIconManifest(modIconResponse);
         setAtlasV2Index(atlasV2Response);
+        setProjectUiPreferences(projectSettings.ui_preferences ?? null);
         setDesktopIconSettings(projectSettings.ui_preferences?.icon_surfaces ?? null);
         setMobileIconSettings(projectSettings.ui_preferences?.mobile_icon_surfaces ?? null);
         setCloudFiles(cloudResponse.files ?? []);
@@ -348,6 +353,7 @@ export function CubixCraftWorkspace() {
   const iconSurface = surfaces.cubixCraftGrid;
   const outputSurface = surfaces.craftOutput;
   const heldSurface = surfaces.touchHeld;
+  const iconSurfaceStyle = useIconSurfaceCssVars(desktopIconSettings, mobileIconSettings);
 
   const visibleItems = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -583,8 +589,36 @@ export function CubixCraftWorkspace() {
       ? grid[editing.row]?.[editing.col]?.opaqueNbt
       : undefined;
 
+  function applyIconSettingsLive(profile: IconSettingsProfile, settings: IconSurfaceSettingsMap) {
+    if (profile === 'mobile') setMobileIconSettings(settings);
+    else setDesktopIconSettings(settings);
+    setProjectUiPreferences((current) => current ? {
+      ...current,
+      ...(profile === 'mobile' ? { mobile_icon_surfaces: settings } : { icon_surfaces: settings })
+    } : current);
+  }
+
+  async function saveIconSettings(profile: IconSettingsProfile, settings: IconSurfaceSettingsMap) {
+    const base = projectUiPreferences ?? (await getProjectSettings()).ui_preferences;
+    const nextPreferences: UiPreferences = {
+      ...base,
+      ...(profile === 'mobile' ? { mobile_icon_surfaces: settings } : { icon_surfaces: settings })
+    };
+    const response: ProjectSettings = await updateProjectUiPreferences(nextPreferences);
+    setProjectUiPreferences(response.ui_preferences);
+    setDesktopIconSettings(response.ui_preferences.icon_surfaces);
+    setMobileIconSettings(response.ui_preferences.mobile_icon_surfaces);
+  }
+
   return (
-    <main className="app-shell" onClick={() => { if (heldRaw) setHeldRaw(null); }} style={{ padding: mobile ? 12 : 18, maxWidth: mobile ? undefined : 1700, margin: '0 auto', minWidth: mobile ? 1040 : undefined }}>
+    <IconSurfaceSettingsProvider
+      desktopSettings={desktopIconSettings}
+      mobileSettings={mobileIconSettings}
+      onLiveChange={applyIconSettingsLive}
+      onSave={saveIconSettings}
+      renderSampleIcon={(_surfaceId, settings) => itemVisual(outputRaw || visibleItems[0]?.raw || '', settings)}
+    >
+    <main className="app-shell" onClick={() => { if (heldRaw) setHeldRaw(null); }} style={{ padding: mobile ? 12 : 18, maxWidth: mobile ? undefined : 1700, margin: '0 auto', minWidth: mobile ? 1040 : undefined, ...iconSurfaceStyle }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
         <a className="ghost-button" href={window.location.pathname}>← Крафты</a>
         <h1 style={{ margin: 0, fontSize: mobile ? 24 : 26 }}>CubixCraft</h1>
@@ -681,6 +715,7 @@ export function CubixCraftWorkspace() {
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: mobile ? 16 : 24, overflow: 'auto', padding: '4px 0 2px' }}>
+            <IconSurfaceSettingsHost surfaceId="cubixCraftGrid" title="Настроить сетку CubixCraft">
             <div className="grid-wrap cubixcraft-grid" data-grid-size="9" style={{ '--extreme-grid-gap': '8px', gap: `${iconSurface.gap}px`, flex: '0 0 auto' } as CSSProperties}>
               {grid.map((row, rowIndex) => (
                 <div key={rowIndex} className={`grid-row ${rowIndex > 0 && rowIndex % 3 === 0 ? 'group-row-start' : ''}`} style={{ gap: iconSurface.gap }}>
@@ -713,6 +748,7 @@ export function CubixCraftWorkspace() {
                 </div>
               ))}
             </div>
+            </IconSurfaceSettingsHost>
 
             <div style={{ display: 'grid', justifyItems: 'center', alignContent: 'center', gap: 12, minWidth: 150 }}>
               <label style={{ display: 'grid', gap: 5, width: 140 }}>
@@ -728,6 +764,7 @@ export function CubixCraftWorkspace() {
 
               <div style={{ display: 'grid', justifyItems: 'center', gap: 5 }}>
                 <span style={{ fontSize: 12, opacity: 0.72 }}>Результат</span>
+                <IconSurfaceSettingsHost surfaceId="craftOutput" title="Настроить результат CubixCraft">
                 <div
                   className={`grid-cell cubixcraft-output-cell ${outputRaw ? 'is-filled' : 'is-empty'}`}
                   style={{ width: outputSurface.cell, height: outputSurface.cell, minWidth: outputSurface.cell, minHeight: outputSurface.cell, position: 'relative', cursor: heldRaw ? 'copy' : 'default' }}
@@ -764,6 +801,7 @@ export function CubixCraftWorkspace() {
                   </div>
                   {outputRaw ? <span className="cubixcraft-amount" title={outputAmount.toLocaleString('ru-RU')} style={{ position: 'absolute', right: 2, bottom: 1, zIndex: 20, pointerEvents: 'none', fontSize: 10, fontWeight: 800, color: '#fff', textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 1px 2px #000' }}>{compactAmount(outputAmount)}</span> : null}
                 </div>
+                </IconSurfaceSettingsHost>
                 <span style={{ maxWidth: 150, fontSize: 10, opacity: 0.55, textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{outputRaw || 'пусто'}</span>
               </div>
             </div>
@@ -784,6 +822,7 @@ export function CubixCraftWorkspace() {
           </div>
         </section>
 
+        <IconSurfaceSettingsHost surfaceId="nei" title="Настроить NEI CubixCraft">
         <aside className="panel" onClick={() => { if (heldRaw) setHeldRaw(null); }} style={{ padding: 10, position: 'sticky', top: 8, maxHeight: 'calc(100vh - 110px)', minWidth: 0 }}>
           <input aria-label="cubixcraft-nei-search" placeholder="Поиск NEI" value={search} onChange={(event) => setSearch(event.target.value)} style={{ width: '100%', marginBottom: 8 }} />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, minmax(34px, 1fr))', gap: 4, maxHeight: 'calc(100vh - 190px)', overflow: 'auto', paddingRight: 2 }}>
@@ -815,6 +854,7 @@ export function CubixCraftWorkspace() {
           </div>
           <div style={{ marginTop: 6, opacity: 0.7, fontSize: 11 }}>Выбрано: {heldRaw ?? '—'} · найдено: {visibleItems.length}</div>
         </aside>
+        </IconSurfaceSettingsHost>
       </div>
 
       {heldRaw ? (
@@ -852,5 +892,6 @@ export function CubixCraftWorkspace() {
         </div>
       ) : null}
     </main>
+    </IconSurfaceSettingsProvider>
   );
 }

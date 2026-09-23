@@ -8,6 +8,7 @@ import { duplicateAuctionGraphFolder, moveAuctionGraphPointFolders } from './auc
 import { AuctionRibbon, type AuctionRibbonTab } from './AuctionRibbon';
 import { AuctionStatusBar } from './AuctionStatusBar';
 import { AuctionWorkspaceView, type AuctionWorkspaceViewMode } from './AuctionWorkspaceView';
+import { IconSurfaceSettingsHost } from '../icon-settings/IconSurfaceSettingsHost';
 import { useAuctionLotLibraryState } from './useAuctionLotLibraryState';
 import { useAuctionPlannerPersistence } from './useAuctionPlannerPersistence';
 import type { AuctionBuilderMode, AuctionCommandStage, AuctionCurrency, AuctionCurve, AuctionDayFolder, AuctionDraft, AuctionFolderCategory, AuctionFolderTag, AuctionItemIdMode, AuctionItemOption, AuctionLotItem, AuctionRenderItemIcon, AuctionState, AuctionUiMode, AuctionWorkflowMode } from './auctionTypes';
@@ -383,6 +384,7 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
   };
 
   return (
+    <IconSurfaceSettingsHost surfaceId="auctionPreview" title="Настроить иконки аукционов">
     <div className="auction-builder">
       <AuctionRibbon
         activeTab={ribbonTab === 'commands' && workspaceView !== 'folders' ? 'auctions' : ribbonTab}
@@ -505,5 +507,6 @@ export function AuctionBuilder({ itemOptions, renderItemIcon }: { itemOptions: A
         }}
       />
     </div>
+    </IconSurfaceSettingsHost>
   );
 }

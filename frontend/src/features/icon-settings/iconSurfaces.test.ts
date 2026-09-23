@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildIconSurfaceCssVars } from './iconSurfaces';
+import { buildIconSurfaceCssVars, normalizeIconSurfaceSettings } from './iconSurfaces';
 
 function cssVars(settings?: Parameters<typeof buildIconSurfaceCssVars>[0]): Record<string, string> {
   return buildIconSurfaceCssVars(settings, null) as Record<string, string>;
@@ -41,5 +41,23 @@ describe('buildIconSurfaceCssVars', () => {
     expect(vars['--icon-craft-output-render-transform']).toBeTruthy();
     expect(vars['--icon-draft-preview9-render-transform']).toBeTruthy();
     expect(vars['--icon-auction-nei-render-transform']).toBeTruthy();
+  });
+
+  it('fills new controls from legacy profiles without moving existing icons', () => {
+    const normalized = normalizeIconSurfaceSettings({ nei: { cell: 34, icon: 28, gap: 5, mode: 'scale' } });
+
+    expect(normalized.nei.gapX).toBe(5);
+    expect(normalized.nei.gapY).toBe(5);
+    expect(normalized.nei.padding).toBe(0);
+    expect(normalized.nei.spriteScale).toBe(1);
+    expect(normalized.nei.smoothing).toBe('pixelated');
+  });
+
+  it('preserves an explicit zero gap', () => {
+    const normalized = normalizeIconSurfaceSettings({ nei: { gap: 0 } });
+
+    expect(normalized.nei.gap).toBe(0);
+    expect(normalized.nei.gapX).toBe(0);
+    expect(normalized.nei.gapY).toBe(0);
   });
 });
