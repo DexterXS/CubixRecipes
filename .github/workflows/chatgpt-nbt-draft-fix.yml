@@ -1,0 +1,303 @@
+name: Apply NBT draft variant fix
+
+on:
+  push:
+    branches:
+      - chatgpt/fix-nbt-draft-variant-title
+    paths:
+      - .github/workflows/chatgpt-nbt-draft-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/fix-nbt-draft-variant-title
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Apply focused fix
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: Path, old: str, new: str, label: str) -> None:
+              text = path.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected exactly one match, got {count}')
+              path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          app = Path('frontend/src/pages/App.tsx')
+
+          replace_once(
+              app,
+              r'''function rawHasNbtTag(raw: string): boolean {
+            return /\.withTag\(\s*[\s\S]+?\s*\)\s*$/.test(raw.trim());
+          }
+
+          function itemPanelEntryHasNbtTag(entry: ItemPanelEntry): boolean {''',
+              r'''function rawHasNbtTag(raw: string): boolean {
+            return /\.withTag\(\s*[\s\S]+?\s*\)\s*$/.test(raw.trim());
+          }
+
+          function itemRawLookupIdentity(raw: string): string {
+            const trimmed = raw.trim();
+            const match = trimmed.match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>(?:\.withTag\(([\s\S]*)\))?$/);
+            if (!match) return trimmed;
+            const key = match[1].toLowerCase();
+            const metaToken = (match[2] ?? '').toLowerCase();
+            const meta = metaToken && metaToken !== '0' ? `:${metaToken}` : '';
+            const base = `<${key}${meta}>`;
+            if (match[3] === undefined) return base;
+            return `${base}.withTag(${match[3].trim()})`;
+          }
+
+          function itemPanelEntryHasNbtTag(entry: ItemPanelEntry): boolean {''',
+              'add case-insensitive exact NBT lookup identity',
+          )
+
+          replace_once(
+              app,
+              '''    if (rawHasNbtTag(raw)) {
+                const exactEntry = itemPanelEntryByRaw.get(raw);
+                const exactTitle = exactEntry?.displayRu || exactEntry?.displayEn;
+                if (exactTitle) {
+                  return exactTitle;
+                }
+              }''',
+              '''    if (rawHasNbtTag(raw)) {
+                const exactEntry = itemPanelEntryByRaw.get(raw) ?? itemPanelEntryByRaw.get(itemRawLookupIdentity(raw));
+                const exactTitle = exactEntry?.displayRu || exactEntry?.displayEn;
+                if (exactTitle) {
+                  return exactTitle;
+                }
+              }''',
+              'use normalized exact NBT identity for titles',
+          )
+
+          replace_once(
+              app,
+              '''  const itemPanelEntryByRaw = useMemo(() => {
+                const byRaw = new Map<string, ItemPanelEntry>();
+                neiCatalogEntries.forEach((entry) => {
+                  byRaw.set(itemPanelRaw(entry), entry);
+                });
+                return byRaw;
+              }, [neiCatalogEntries]);''',
+              '''  const itemPanelEntryByRaw = useMemo(() => {
+                const byRaw = new Map<string, ItemPanelEntry>();
+                neiCatalogEntries.forEach((entry) => {
+                  const raw = itemPanelRaw(entry);
+                  byRaw.set(raw, entry);
+                  byRaw.set(itemRawLookupIdentity(raw), entry);
+                });
+                return byRaw;
+              }, [neiCatalogEntries]);''',
+              'index normalized exact NBT identities',
+          )
+
+          replace_once(
+              app,
+              '''    recipeDraftTemplates.forEach((template) => {
+                recipeLookupKeysForRaw(template.outputRaw).forEach((key) => {
+                  const templates = byOutput.get(key) ?? [];
+                  if (!templates.some((current) => current.id === template.id)) {
+                    templates.push(template);
+                    byOutput.set(key, templates);
+                  }
+                });
+              });''',
+              '''    recipeDraftTemplates.forEach((template) => {
+                const lookupKeys = rawHasNbtTag(template.outputRaw)
+                  ? new Set([template.outputRaw, itemRawLookupIdentity(template.outputRaw)])
+                  : new Set(recipeLookupKeysForRaw(template.outputRaw));
+                lookupKeys.forEach((key) => {
+                  const templates = byOutput.get(key) ?? [];
+                  if (!templates.some((current) => current.id === template.id)) {
+                    templates.push(template);
+                    byOutput.set(key, templates);
+                  }
+                });
+              });''',
+              'index NBT draft templates by normalized exact identity',
+          )
+
+          replace_once(
+              app,
+              '''  function getRecipeDraftTemplatesForRaw(raw: string): RecipeDraftTemplate[] {
+                const templates = new Map<string, RecipeDraftTemplate>();
+                const lookupKeys = rawHasNbtTag(raw) ? [raw] : recipeLookupKeysForRaw(raw);
+                lookupKeys.forEach((key) => {
+                  (recipeDraftTemplatesByOutputKey.get(key) ?? []).forEach((template) => templates.set(template.id, template));
+                });
+                return [...templates.values()];
+              }''',
+              '''  function getRecipeDraftTemplatesForRaw(raw: string): RecipeDraftTemplate[] {
+                const templates = new Map<string, RecipeDraftTemplate>();
+                const lookupKeys = rawHasNbtTag(raw)
+                  ? new Set([raw, itemRawLookupIdentity(raw)])
+                  : new Set(recipeLookupKeysForRaw(raw));
+                lookupKeys.forEach((key) => {
+                  (recipeDraftTemplatesByOutputKey.get(key) ?? []).forEach((template) => templates.set(template.id, template));
+                });
+                return [...templates.values()];
+              }''',
+              'lookup NBT drafts by normalized exact identity',
+          )
+
+          drafts = Path('frontend/src/features/drafts/DraftsWorkspace.tsx')
+          replace_once(
+              drafts,
+              '''                        <strong>{activeDraftPreview.name}</strong>''',
+              '''                        <strong>{draftTemplateDisplayName(activeDraftPreview, resolveCellTitle)}</strong>''',
+              'resolve exact title in draft preview header',
+          )
+
+          cache = Path('frontend/src/services/bootstrapCache.ts')
+          replace_once(
+              cache,
+              'const ITEM_CATALOG_CACHE_SCHEMA_VERSION = 2;',
+              'const ITEM_CATALOG_CACHE_SCHEMA_VERSION = 3;',
+              'invalidate pre-fix item catalog browser cache',
+          )
+
+          tests = Path('frontend/src/App.test.tsx')
+          old_test = r'''test('draft selection keeps NBT variants separate and uses the exact variant title', async () => {
+            const exactRaw = '<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})';
+            const otherVariantRaw = '<examplemod:charged:1>.withTag({charge: 7, ea_module_admin: 1})';
+            const makeDraft = (id: string, outputRaw: string, name: string) => ({
+              id,
+              outputRaw,
+              recipe: {
+                recipe_uid: id,
+                recipe_type: 'ct_shaped',
+                binding_mode: 'soft',
+                name: null,
+                output: { raw: outputRaw },
+                output_resolution: null,
+                grid_w: 1,
+                grid_h: 1,
+                source: { kind: 'local_draft', path: `draft:${outputRaw}` },
+                matrix: [[{ raw: null }]]
+              },
+              sourceText: `recipes.addShaped(${outputRaw}, [[<minecraft:stick>]]);`,
+              createdByEmail: adminUser.email,
+              createdAt: 1770000000000,
+              updatedAt: 1770000000000,
+              name
+            });
+
+            mockRecipeDraftTemplates = [
+              makeDraft('charged-exact', exactRaw, 'Старое общее имя #1'),
+              makeDraft('charged-other', otherVariantRaw, 'Другая версия #2')
+            ];
+
+            render(<App authUser={adminUser} onLogout={vi.fn()} />);
+            fireEvent.click(await screen.findByRole('button', { name: 'Черновики' }));
+            fireEvent.click(await screen.findByLabelText(`draft-item-${exactRaw}`));
+
+            const templateList = await screen.findByLabelText('draft-template-list');
+            expect(within(templateList).getAllByRole('checkbox')).toHaveLength(1);
+            expect(within(templateList).getByText('Charged item #1')).toBeTruthy();
+            expect(within(templateList).queryByText('Другая версия #2')).toBeFalsy();
+          });'''
+
+          new_test = r'''test('draft selection keeps NBT variants separate and uses the exact variant title across item casing', async () => {
+            const exactRaw = '<cubixdetector:earthdetector>.withTag({DetectorPower:3600,DetectorMaterial:"GOLD"})';
+            const otherVariantRaw = '<cubixdetector:earthdetector>.withTag({DetectorPower:7200,DetectorMaterial:"DIAMOND"})';
+            const originalFetch = global.fetch;
+            global.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+              if (String(input) === '/api/itempanel/catalog') {
+                return Promise.resolve({
+                  ok: true,
+                  headers: new Headers({ 'content-type': 'application/json' }),
+                  json: async () => ({
+                    entries: [
+                      { key: 'minecraft:stick', legacy_id: 280, meta: 0, has_nbt: false, display_ru: 'Палка', display_en: 'Stick', raw: '<minecraft:stick>', nbt_raw: null, has_icon: true, sources: ['csv', 'icon'] },
+                      { key: 'cubixdetector:earthdetector', legacy_id: 7159, meta: 0, has_nbt: true, display_ru: 'Железный Наземный Детектор', display_en: 'Iron Ground Detector', raw: '<CubixDetector:earthdetector>.withTag({DetectorPower:600,DetectorMaterial:"IRON"})', nbt_raw: '{DetectorPower:600,DetectorMaterial:"IRON"}', has_icon: false, sources: ['csv', 'nbt'] },
+                      { key: 'cubixdetector:earthdetector', legacy_id: 7159, meta: 0, has_nbt: true, display_ru: 'Золотой Наземный Детектор', display_en: 'Gold Ground Detector', raw: '<CubixDetector:earthdetector>.withTag({DetectorPower:3600,DetectorMaterial:"GOLD"})', nbt_raw: '{DetectorPower:3600,DetectorMaterial:"GOLD"}', has_icon: false, sources: ['csv', 'nbt'] }
+                    ],
+                    summary: { entries: 3, csv_entries: 3, snbt_rows: 2, nbt_entries: 2, merged_csv_exists: true }
+                  })
+                }) as Promise<Response>;
+              }
+              return originalFetch(input, init);
+            });
+
+            const makeDraft = (id: string, outputRaw: string, name: string) => ({
+              id,
+              outputRaw,
+              recipe: {
+                recipe_uid: id,
+                recipe_type: 'ct_shaped',
+                binding_mode: 'soft',
+                name: null,
+                output: { raw: outputRaw },
+                output_resolution: null,
+                grid_w: 1,
+                grid_h: 1,
+                source: { kind: 'local_draft', path: `draft:${outputRaw}` },
+                matrix: [[{ raw: null }]]
+              },
+              sourceText: `recipes.addShaped(${outputRaw}, [[<minecraft:stick>]]);`,
+              createdByEmail: adminUser.email,
+              createdAt: 1770000000000,
+              updatedAt: 1770000000000,
+              name
+            });
+
+            mockRecipeDraftTemplates = [
+              makeDraft('detector-gold', exactRaw, 'Железный Наземный Детектор #99'),
+              makeDraft('detector-diamond', otherVariantRaw, 'Алмазный Наземный Детектор #100')
+            ];
+
+            render(<App authUser={adminUser} onLogout={vi.fn()} />);
+            fireEvent.click(await screen.findByRole('button', { name: 'Черновики' }));
+            fireEvent.click(await screen.findByLabelText(`draft-item-${exactRaw}`));
+
+            const templateList = await screen.findByLabelText('draft-template-list');
+            expect(within(templateList).getAllByRole('checkbox')).toHaveLength(1);
+            expect(within(templateList).getByText('Золотой Наземный Детектор #99')).toBeTruthy();
+            expect(within(templateList).queryByText('Алмазный Наземный Детектор #100')).toBeFalsy();
+            const preview = screen.getByLabelText('draft-template-preview');
+            expect(within(preview).getByText('Золотой Наземный Детектор #99')).toBeTruthy();
+            expect(within(preview).queryByText('Железный Наземный Детектор #99')).toBeFalsy();
+          });'''
+
+          replace_once(tests, old_test, new_test, 'upgrade exact NBT draft regression test')
+          PY
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Run focused frontend tests
+        working-directory: frontend
+        run: npm test -- App.test.tsx
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Commit tested fix to branch
+        shell: bash
+        run: |
+          rm .github/workflows/chatgpt-nbt-draft-fix.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add frontend/src/pages/App.tsx frontend/src/features/drafts/DraftsWorkspace.tsx frontend/src/services/bootstrapCache.ts frontend/src/App.test.tsx .github/workflows/chatgpt-nbt-draft-fix.yml
+          git diff --cached --check
+          git commit -m 'Fix exact NBT draft variant titles'
+          git push origin HEAD:chatgpt/fix-nbt-draft-variant-title
