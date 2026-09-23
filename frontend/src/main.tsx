@@ -13,6 +13,7 @@ import { installConsoleCapture } from './services/debugLog';
 import { AuthGate } from './auth/AuthGate';
 import { ServerSelect } from './auth/ServerSelect';
 import { VersionReloadBanner } from './components/VersionReloadBanner';
+import { AppErrorBoundary } from './components/AppErrorBoundary';
 import { CubixCraftWorkspace } from './features/cubixcraft/CubixCraftWorkspace';
 import { ItemDatabasePage } from './features/item-database/ItemDatabasePage';
 import { installCubixCraftActiveStarClickFix } from './features/cubixcraft/activeStarClickFix';
@@ -22,6 +23,7 @@ import { installCubixCraftDraftVariants } from './features/cubixcraft/draftVaria
 import { installCompactCubixAmounts } from './features/cubixcraft/compactAmountOverlay';
 import { installCubixVariantInteractionFix } from './features/cubixcraft/variantInteractionFix';
 import { installCubixCraftVariantDelete } from './features/cubixcraft/variantDeleteOverlay';
+import { installCubixCraftHeldCursorFix } from './features/cubixcraft/heldCursorFix';
 import { AuthUser } from './types';
 
 installConsoleCapture();
@@ -32,6 +34,7 @@ installCubixCraftDraftVariants();
 installCompactCubixAmounts();
 installCubixVariantInteractionFix();
 installCubixCraftVariantDelete();
+installCubixCraftHeldCursorFix();
 
 function installAtlasPageCacheWorker() {
   if (!('serviceWorker' in navigator)) return;
@@ -111,12 +114,14 @@ function ServerGate({ authUser, onLogout }: ServerGateProps) {
   return (
     <>
       <VersionReloadBanner />
-      <App
-        authUser={authUser}
-        onLogout={onLogout}
-        onResetServer={handleResetServer}
-        activeServerId={selectedServer}
-      />
+      {!cubixCraftOpen ? (
+        <App
+          authUser={authUser}
+          onLogout={onLogout}
+          onResetServer={handleResetServer}
+          activeServerId={selectedServer}
+        />
+      ) : null}
       {cubixCraftOpen ? (
         <div className="cubixcraft-embedded">
           <CubixCraftWorkspace />
@@ -133,8 +138,10 @@ function ServerGate({ authUser, onLogout }: ServerGateProps) {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthGate>
-      {(user, onLogout) => <ServerGate authUser={user} onLogout={onLogout} />}
-    </AuthGate>
+    <AppErrorBoundary>
+      <AuthGate>
+        {(user, onLogout) => <ServerGate authUser={user} onLogout={onLogout} />}
+      </AuthGate>
+    </AppErrorBoundary>
   </React.StrictMode>
 );
