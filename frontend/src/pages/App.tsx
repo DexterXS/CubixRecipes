@@ -960,6 +960,18 @@ function rawHasNbtTag(raw: string): boolean {
   return /\.withTag\(\s*[\s\S]+?\s*\)\s*$/.test(raw.trim());
 }
 
+function itemRawLookupIdentity(raw: string): string {
+  const trimmed = raw.trim();
+  const match = trimmed.match(/^<([a-zA-Z0-9_.-]+:[a-zA-Z0-9_./-]+)(?::([0-9*]+))?>(?:\.withTag\(([\s\S]*)\))?$/);
+  if (!match) return trimmed;
+  const key = match[1].toLowerCase();
+  const metaToken = (match[2] ?? '').toLowerCase();
+  const meta = metaToken && metaToken !== '0' ? `:${metaToken}` : '';
+  const base = `<${key}${meta}>`;
+  if (match[3] === undefined) return base;
+  return `${base}.withTag(${match[3].trim()})`;
+}
+
 function itemPanelEntryHasNbtTag(entry: ItemPanelEntry): boolean {
   return Boolean(entry.nbtRaw?.trim()) || rawHasNbtTag(itemPanelRaw(entry));
 }
@@ -3534,7 +3546,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return custom.display_name;
     }
     if (rawHasNbtTag(raw)) {
-      const exactEntry = itemPanelEntryByRaw.get(raw);
+      const exactEntry = itemPanelEntryByRaw.get(raw) ?? itemPanelEntryByRaw.get(itemRawLookupIdentity(raw));
       const exactTitle = exactEntry?.displayRu || exactEntry?.displayEn;
       if (exactTitle) {
         return exactTitle;
@@ -3642,7 +3654,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const itemPanelEntryByRaw = useMemo(() => {
     const byRaw = new Map<string, ItemPanelEntry>();
     neiCatalogEntries.forEach((entry) => {
-      byRaw.set(itemPanelRaw(entry), entry);
+      const raw = itemPanelRaw(entry);
+      byRaw.set(raw, entry);
+      byRaw.set(itemRawLookupIdentity(raw), entry);
     });
     return byRaw;
   }, [neiCatalogEntries]);

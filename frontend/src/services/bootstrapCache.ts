@@ -1,7 +1,7 @@
 import type { NeiFavoritesProfile } from '../types';
 
 const CACHE_SCHEMA_VERSION = 1;
-const ITEM_CATALOG_CACHE_SCHEMA_VERSION = 2;
+const ITEM_CATALOG_CACHE_SCHEMA_VERSION = 3;
 const DATABASE_NAME = 'cubixrecipes-bootstrap-v1';
 const DATABASE_VERSION = 1;
 const SNAPSHOT_STORE = 'snapshots';

@@ -1810,6 +1810,68 @@ test('draft selection keeps NBT variants separate and uses the exact variant tit
   expect(within(templateList).queryByText('Другая версия #2')).toBeFalsy();
 });
 
+test('draft titles resolve the exact NBT variant when catalog item casing differs', async () => {
+  const exactRaw = '<cubixdetector:earthdetector>.withTag({DetectorPower:3600,DetectorMaterial:"GOLD"})';
+  const otherVariantRaw = '<cubixdetector:earthdetector>.withTag({DetectorPower:7200,DetectorMaterial:"DIAMOND"})';
+  const originalFetch = global.fetch;
+  global.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+    if (String(input) === '/api/itempanel/catalog') {
+      return Promise.resolve({
+        ok: true,
+        headers: new Headers({ 'content-type': 'application/json' }),
+        json: async () => ({
+          entries: [
+            { key: 'minecraft:stick', legacy_id: 280, meta: 0, has_nbt: false, display_ru: 'Палка', display_en: 'Stick', raw: '<minecraft:stick>', nbt_raw: null, has_icon: true, sources: ['csv', 'icon'] },
+            { key: 'cubixdetector:earthdetector', legacy_id: 7159, meta: 0, has_nbt: true, display_ru: 'Железный Наземный Детектор', display_en: 'Iron Ground Detector', raw: '<CubixDetector:earthdetector>.withTag({DetectorPower:600,DetectorMaterial:"IRON"})', nbt_raw: '{DetectorPower:600,DetectorMaterial:"IRON"}', has_icon: false, sources: ['csv', 'nbt'] },
+            { key: 'cubixdetector:earthdetector', legacy_id: 7159, meta: 0, has_nbt: true, display_ru: 'Золотой Наземный Детектор', display_en: 'Gold Ground Detector', raw: '<CubixDetector:earthdetector>.withTag({DetectorPower:3600,DetectorMaterial:"GOLD"})', nbt_raw: '{DetectorPower:3600,DetectorMaterial:"GOLD"}', has_icon: false, sources: ['csv', 'nbt'] }
+          ],
+          summary: { entries: 3, csv_entries: 3, snbt_rows: 2, nbt_entries: 2, merged_csv_exists: true }
+        })
+      }) as Promise<Response>;
+    }
+    return originalFetch(input, init);
+  });
+
+  const makeDraft = (id: string, outputRaw: string, name: string) => ({
+    id,
+    outputRaw,
+    recipe: {
+      recipe_uid: id,
+      recipe_type: 'ct_shaped',
+      binding_mode: 'soft',
+      name: null,
+      output: { raw: outputRaw },
+      output_resolution: null,
+      grid_w: 1,
+      grid_h: 1,
+      source: { kind: 'local_draft', path: `draft:${outputRaw}` },
+      matrix: [[{ raw: null }]]
+    },
+    sourceText: `recipes.addShaped(${outputRaw}, [[<minecraft:stick>]]);`,
+    createdByEmail: adminUser.email,
+    createdAt: 1770000000000,
+    updatedAt: 1770000000000,
+    name
+  });
+
+  mockRecipeDraftTemplates = [
+    makeDraft('detector-gold', exactRaw, 'Железный Наземный Детектор #99'),
+    makeDraft('detector-diamond', otherVariantRaw, 'Алмазный Наземный Детектор #100')
+  ];
+
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  fireEvent.click(await screen.findByRole('button', { name: 'Черновики' }));
+  fireEvent.click(await screen.findByLabelText(`draft-item-${exactRaw}`));
+
+  const templateList = await screen.findByLabelText('draft-template-list');
+  expect(within(templateList).getAllByRole('checkbox')).toHaveLength(1);
+  expect(within(templateList).getByText('Золотой Наземный Детектор #99')).toBeTruthy();
+  expect(within(templateList).queryByText('Алмазный Наземный Детектор #100')).toBeFalsy();
+
+  const preview = screen.getByLabelText('draft-template-preview');
+  expect(within(preview).getByText('Золотой Наземный Детектор #99')).toBeTruthy();
+  expect(within(preview).queryByText('Железный Наземный Детектор #99')).toBeFalsy();
+});
 test('admin can browse recipe draft templates created by moderators', async () => {
   mockRecipeDraftTemplates = [{
     id: 'moderator-template-1',

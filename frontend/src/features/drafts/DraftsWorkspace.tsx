@@ -324,7 +324,7 @@ export function DraftsWorkspace({
                   <div className="draft-template-preview" aria-label="draft-template-preview">
                     <div className="draft-preview-header">
                       <div className="draft-preview-meta">
-                        <strong>{activeDraftPreview.name}</strong>
+                        <strong>{draftTemplateDisplayName(activeDraftPreview, resolveCellTitle)}</strong>
                         <span>{activeDraftPreview.outputRaw}</span>
                         <small>Создал: {activeDraftPreview.createdByEmail}</small>
                         <small>Обновлён: {new Date(activeDraftPreview.updatedAt).toLocaleString()}</small>
