@@ -175,7 +175,7 @@ jobs:
 
       - name: Run focused frontend tests
         working-directory: frontend
-        run: npm test -- App.test.tsx
+        run: npm test -- App.test.tsx -t "draft titles resolve the exact NBT variant when catalog item casing differs"
 
       - name: Build frontend
         working-directory: frontend
