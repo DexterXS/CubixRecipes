@@ -146,7 +146,11 @@ export function ItemTooltipLayer({ renderTooltip }: ItemTooltipLayerProps) {
         { width: tooltip.offsetWidth, height: tooltip.offsetHeight },
         { width: window.innerWidth, height: window.innerHeight }
       );
-      setPosition(nextPosition);
+      setPosition((current) => (
+        current?.left === nextPosition.left && current.top === nextPosition.top
+          ? current
+          : nextPosition
+      ));
     };
 
     updatePosition();

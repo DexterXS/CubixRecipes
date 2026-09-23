@@ -3645,6 +3645,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       itemPanelModSummaries.forEach((summary) => {
         next[summary.modid] = current[summary.modid] ?? true;
       });
+      const currentModids = Object.keys(current);
+      const nextModids = Object.keys(next);
+      if (
+        currentModids.length === nextModids.length
+        && nextModids.every((modid) => current[modid] === next[modid])
+      ) {
+        return current;
+      }
       return next;
     });
   }, [itemPanelModSummaries]);
