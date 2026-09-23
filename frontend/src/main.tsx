@@ -7,6 +7,7 @@ import './styles/mobile.css';
 import './styles/mobile-craft-icons.css';
 import './styles/mobile-shell.css';
 import './styles/cubixcraft.css';
+import './styles/cubixcraft-stability.css';
 import './styles/item-database.css';
 import './styles/icon-placement.css';
 import { installConsoleCapture } from './services/debugLog';
