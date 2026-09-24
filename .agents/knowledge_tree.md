@@ -412,6 +412,7 @@ Last full rebuild: 2026-06-29
 ### Recipe Editor Feature
 - `frontend/src/features/recipe-editor/CraftsWorkspace.tsx`
   - Owns the fixed desktop five-zone composition: NEI favorites, editor/files, compact NEI, all drafts, and editable previews for recipes of the selected draft.
+  - The desktop composition styling lives in `frontend/src/styles.css`: side regions use content-sized auto rows and capped fit-content columns, while the center uses content-sized editor/files rows to avoid artificial bottom whitespace.
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.tsx`
   - Owns the editor workspace shell that keeps desktop columns stable while exposing phone-specific NEI/Favorites tab switching.
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`
