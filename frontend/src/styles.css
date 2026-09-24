@@ -342,7 +342,8 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 8px 
 .favorite-browser-tab-placeholder { width: 26px; height: 26px; border: 1px dashed color-mix(in srgb, var(--muted) 70%, transparent); border-radius: 4px; }
 .favorite-browser-tab-icon img,
 .favorite-browser-tab-icon .animated-icon,
-.favorite-browser-tab-icon .output-atlas-icon { width: 26px; height: 26px; object-fit: contain; image-rendering: pixelated; }
+.favorite-browser-tab-icon .cell-atlas-icon,
+.favorite-browser-tab-icon .output-atlas-icon { width: 24px; height: 24px; max-width: 24px; max-height: 24px; object-fit: contain; image-rendering: pixelated; transform: none; }
 .favorite-browser-tab-add { font-size: 20px; line-height: 1; }
 .favorite-settings-menu { position: relative; flex: none; }
 .favorite-settings-trigger { min-width: 34px; height: 34px; padding: 0; border-radius: 6px; }

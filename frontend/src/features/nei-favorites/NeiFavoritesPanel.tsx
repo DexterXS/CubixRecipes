@@ -1,4 +1,4 @@
-import { type DragEvent, type ReactNode, useState } from 'react';
+import { type DragEvent, type MouseEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { Panel } from '../../components/Panel';
 import { type NeiFavoriteTab, type NeiFavoritesProfile } from '../../types';
@@ -14,6 +14,7 @@ interface NeiFavoritesPanelProps {
   availableFavoriteRaws?: string[];
   onSelectTab: (tabId: string) => void;
   onRenameActiveTab: (name: string) => void;
+  onRenameTab?: (tabId: string, name: string) => void;
   onNewTabNameChange: (name: string) => void;
   onAddTab: () => void;
   onDeleteActiveTab: () => void;
@@ -33,6 +34,7 @@ export function NeiFavoritesPanel({
   availableFavoriteRaws = [],
   onSelectTab,
   onRenameActiveTab,
+  onRenameTab,
   onNewTabNameChange,
   onAddTab,
   onDeleteActiveTab,
@@ -43,15 +45,59 @@ export function NeiFavoritesPanel({
   const [creatingTab, setCreatingTab] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [iconChangeOpen, setIconChangeOpen] = useState(false);
+  const [selectedTabId, setSelectedTabId] = useState(activeTab.id);
+  const [contextMenu, setContextMenu] = useState<{ tabId: string; x: number; y: number } | null>(null);
+  const [contextNameDraft, setContextNameDraft] = useState(activeTab.name);
+  const contextMenuRef = useRef<HTMLDivElement | null>(null);
+
+  const selectedTab = profile.tabs.find((tab) => tab.id === selectedTabId) ?? activeTab;
+
+  useEffect(() => {
+    if (!profile.tabs.some((tab) => tab.id === selectedTabId)) {
+      setSelectedTabId(activeTab.id);
+    }
+  }, [activeTab.id, profile.tabs, selectedTabId]);
+
+  useEffect(() => {
+    if (!contextMenu) return undefined;
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (!contextMenuRef.current?.contains(event.target as Node)) {
+        setContextMenu(null);
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setContextMenu(null);
+    };
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [contextMenu]);
 
   const iconRawOptions = Array.from(new Set([
     ...availableFavoriteRaws,
-    ...(activeTab.iconRaw ? [activeTab.iconRaw] : [])
+    ...(selectedTab.iconRaw ? [selectedTab.iconRaw] : []),
+    ...(selectedTab.items[0]?.raw ? [selectedTab.items[0].raw] : [])
   ]));
 
   const handleSelectTab = (tabId: string) => {
+    setSelectedTabId(tabId);
     onSelectTab(tabId);
     setIconChangeOpen(false);
+  };
+
+  const handleTabContextMenu = (event: MouseEvent<HTMLButtonElement>, tabId: string) => {
+    event.preventDefault();
+    const tab = profile.tabs.find((candidate) => candidate.id === tabId) ?? selectedTab;
+    setContextNameDraft(tab.name);
+    setContextMenu({ tabId, x: event.clientX, y: event.clientY });
+  };
+
+  const commitContextName = () => {
+    if (!contextMenu || !onRenameTab) return;
+    onRenameTab(contextMenu.tabId, contextNameDraft);
   };
 
   const handleSettingsToggle = () => {
@@ -75,7 +121,7 @@ export function NeiFavoritesPanel({
   };
 
   const handleIconRawChange = (raw: string) => {
-    onAssignTabIconRaw?.(activeTab.id, raw || null);
+    onAssignTabIconRaw?.(selectedTab.id, raw || null);
   };
 
   const handleAddTab = () => {
@@ -97,11 +143,12 @@ export function NeiFavoritesPanel({
                   role="tab"
                   aria-label={tab.name}
                   title={tab.name}
-                  aria-selected={tab.id === profile.activeTabId}
-                  className={`favorite-browser-tab ${tab.id === profile.activeTabId ? 'active' : ''} ${iconChangeOpen && tab.id === activeTab.id ? 'icon-drop-target' : ''}`.trim()}
+                  aria-selected={tab.id === selectedTab.id}
+                  className={`favorite-browser-tab ${tab.id === selectedTab.id ? 'active' : ''} ${iconChangeOpen && tab.id === selectedTab.id ? 'icon-drop-target' : ''}`.trim()}
                   onClick={() => handleSelectTab(tab.id)}
-                  onDragOver={iconChangeOpen && tab.id === activeTab.id ? handleTabDragOver : undefined}
-                  onDrop={iconChangeOpen && tab.id === activeTab.id ? (event) => handleTabDrop(event, tab.id) : undefined}
+                  onContextMenu={(event) => handleTabContextMenu(event, tab.id)}
+                  onDragOver={iconChangeOpen && tab.id === selectedTab.id ? handleTabDragOver : undefined}
+                  onDrop={iconChangeOpen && tab.id === selectedTab.id ? (event) => handleTabDrop(event, tab.id) : undefined}
                 >
                   {tabIconRaw && renderFavoriteTabIcon ? (
                     <span className="favorite-browser-tab-icon" aria-hidden="true">
@@ -121,6 +168,56 @@ export function NeiFavoritesPanel({
               +
             </button>
           </div>
+          {contextMenu && onRenameTab ? (() => {
+            const contextTab = profile.tabs.find((tab) => tab.id === contextMenu.tabId) ?? selectedTab;
+            return (
+              <div
+                ref={contextMenuRef}
+                className="favorite-tab-context-menu"
+                style={{ left: contextMenu.x, top: contextMenu.y }}
+                role="dialog"
+                aria-label="favorite-tab-context-menu"
+              >
+                <strong>Настройки вкладки</strong>
+                <label className="field-block">
+                  <span>Имя</span>
+                  <input
+                    aria-label="favorite-context-tab-name"
+                    value={contextNameDraft}
+                    onChange={(event) => setContextNameDraft(event.target.value)}
+                    onBlur={commitContextName}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        event.preventDefault();
+                        commitContextName();
+                        setContextMenu(null);
+                      }
+                    }}
+                    autoFocus
+                  />
+                </label>
+                <label className="field-block">
+                  <span>Иконка из NEI</span>
+                  <select
+                    aria-label="favorite-context-tab-icon"
+                    value={contextTab.iconRaw || ''}
+                    onChange={(event) => onAssignTabIconRaw?.(contextTab.id, event.target.value || null)}
+                  >
+                    <option value="">Первый предмет вкладки</option>
+                    {iconRawOptions.map((raw) => <option key={raw} value={raw}>{raw}</option>)}
+                  </select>
+                </label>
+                <div className="favorite-tab-context-actions">
+                  <button type="button" className="secondary-button" onClick={() => { handleSelectTab(contextTab.id); setContextMenu(null); }}>
+                    Открыть вкладку
+                  </button>
+                  <button type="button" className="ghost-button" onClick={() => { commitContextName(); setContextMenu(null); }}>
+                    Готово
+                  </button>
+                </div>
+              </div>
+            );
+          })() : null}
           <div className="favorite-settings-menu">
             <button
               type="button"
@@ -138,7 +235,7 @@ export function NeiFavoritesPanel({
                 <input
                   aria-label="favorite-active-tab-name"
                   type="text"
-                  value={activeTab.name}
+                  value={selectedTab.name}
                   onChange={(event) => onRenameActiveTab(event.target.value)}
                 />
               </label>
@@ -179,7 +276,7 @@ export function NeiFavoritesPanel({
                         <span>Иконка вкладки</span>
                         <select
                           aria-label="favorite-active-tab-icon-raw"
-                          value={activeTab.iconRaw || ''}
+                          value={selectedTab.iconRaw || ''}
                           onChange={(event) => handleIconRawChange(event.target.value)}
                         >
                           <option value="">Первый предмет вкладки</option>
@@ -249,10 +346,10 @@ export function NeiFavoritesPanel({
 
         <div className="favorite-help-line">
           <span>Наведи или удержи предмет для информации</span>
-          <strong>{activeTab.items.length}</strong>
+          <strong>{selectedTab.items.length}</strong>
         </div>
         <div className="favorite-items nei-list" aria-label="nei-favorites-items">
-          {activeTab.items.length ? activeTab.items.map((item) => renderFavoriteItem(item.raw)) : (
+          {selectedTab.items.length ? selectedTab.items.map((item) => renderFavoriteItem(item.raw)) : (
             <div className="favorite-empty">Пока пусто</div>
           )}
         </div>

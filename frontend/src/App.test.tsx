@@ -1186,6 +1186,32 @@ test('NEI favorites use browser tabs and hide settings behind menu', async () =>
   expect(screen.getByLabelText('nei-hidden-patterns-panel')).toBeTruthy();
 });
 
+test('favorite tabs switch locally and expose name/icon editing from context menu', async () => {
+  mockNeiFavorites = {
+    activeTabId: 'default',
+    favoriteHotkey: 'A',
+    hiddenPatterns: [],
+    tabs: [
+      { id: 'default', name: 'Основное', items: [{ raw: '<minecraft:planks>', addedAt: 1 }] },
+      { id: 'blocks', name: 'Блоки', items: [{ raw: '<minecraft:stick>', addedAt: 2 }] }
+    ]
+  };
+
+  render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
+  expect(await screen.findByLabelText('favorite-item-<minecraft:planks>')).toBeTruthy();
+
+  fireEvent.click(screen.getByRole('tab', { name: 'Блоки' }));
+  expect(screen.getByLabelText('favorite-item-<minecraft:stick>')).toBeTruthy();
+
+  fireEvent.contextMenu(screen.getByRole('tab', { name: 'Блоки' }), { clientX: 80, clientY: 80 });
+  const menu = screen.getByRole('dialog', { name: 'favorite-tab-context-menu' });
+  fireEvent.change(within(menu).getByLabelText('favorite-context-tab-name'), { target: { value: 'Руды' } });
+  fireEvent.change(within(menu).getByLabelText('favorite-context-tab-icon'), { target: { value: '<minecraft:planks>' } });
+  fireEvent.click(within(menu).getByRole('button', { name: 'Готово' }));
+
+  await waitFor(() => expect(mockNeiFavorites.tabs.find((tab: any) => tab.id === 'blocks')).toMatchObject({ name: 'Руды', iconRaw: '<minecraft:planks>' }));
+});
+
 test('favorite items render as NEI icon cells', async () => {
   render(<App authUser={moderatorUser} onLogout={vi.fn()} />);
   const item = await screen.findByLabelText('nei-item-<minecraft:stick>');

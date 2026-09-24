@@ -575,7 +575,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/pages/App.tsx`
   - Owns the NEI item action menu callbacks, including mobile `...` actions for opening the item recipe and viewing recipe usages.
 - `frontend/src/features/nei-favorites/NeiFavoritesPanel.tsx`
-  - Owns icon-only NEI favorite tab presentation, browser-style tab switching, `+` tab creation, and hidden `...` settings UI; icon assignment is explicit and supports chooser or drag/drop from NEI.
+  - Owns icon-only NEI favorite tab presentation, local browser-style tab switching, `+` tab creation, hidden `...` settings UI, and the right-click tab menu for renaming and choosing an icon from visible NEI raws; tab icons use a fixed 24px content box.
   - Receives favorite profile state and persistence callbacks from `pages/App.tsx`.
 
 ### Frontend Services and Types

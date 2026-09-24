@@ -2498,7 +2498,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     persistLocalRecipeDraftPreferences(authUser.email, preferences);
     setDraftPreferencesStatus('Сохраняю настройки…');
     void saveRecipeDraftPreferences(preferences)
-      .then(() => setDraftPreferencesStatus('Настройки сохранены'))
+      .then(() => setDraftPreferencesStatus(''))
       .catch(() => setDraftPreferencesStatus('Сохранено локально'));
   }
 
@@ -3450,10 +3450,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     persistUiPreferences({ ...latestUiPreferencesRef.current, panel_layout: normalizePanelLayout(nextLayout) });
   }
 
-  function persistNeiFavoritesProfile(nextProfile: NeiFavoritesProfile) {
+  function persistNeiFavoritesProfile(nextProfile: NeiFavoritesProfile, options: { render?: boolean } = {}) {
     const normalized = normalizeNeiFavoritesProfile(nextProfile);
     neiFavoritesRef.current = normalized;
-    setNeiFavorites(normalized);
+    if (options.render !== false) {
+      setNeiFavorites(normalized);
+    }
     if (!canUseNeiFavorites) {
       return;
     }
@@ -3470,7 +3472,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           setNeiFavorites(normalizedSaved);
           setNeiHiddenPatternsDraft(normalizedSaved.hiddenPatterns.join('\n'));
           writeCachedNeiFavorites(bootstrapCacheScope, normalizedSaved);
-          setNeiFavoritesStatus('Избранное сохранено');
+          setNeiFavoritesStatus('');
         })
         .catch((error) => {
           setNeiFavoritesStatus(error instanceof Error ? error.message : String(error));
@@ -3487,7 +3489,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function setActiveFavoriteTab(tabId: string) {
-    updateNeiFavoritesProfile((current) => ({ ...current, activeTabId: tabId }));
+    persistNeiFavoritesProfile({ ...neiFavoritesRef.current, activeTabId: tabId }, { render: false });
   }
 
   function assignFavoriteTabIcon(tabId: string, raw: string | null) {
@@ -3499,9 +3501,13 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function renameActiveFavoriteTab(name: string) {
+    renameFavoriteTab(neiFavoritesRef.current.activeTabId, name);
+  }
+
+  function renameFavoriteTab(tabId: string, name: string) {
     updateNeiFavoritesProfile((current) => ({
       ...current,
-      tabs: current.tabs.map((tab) => tab.id === current.activeTabId ? { ...tab, name: name.slice(0, 64) } : tab)
+      tabs: current.tabs.map((tab) => tab.id === tabId ? { ...tab, name: name.slice(0, 64) } : tab)
     }));
   }
 
@@ -3864,9 +3870,9 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   const visibleNeiRawItems = useMemo(() => neiItems.map((entry) => itemPanelRaw(entry)), [neiItems]);
   const activeFavoriteRawSet = useMemo(() => {
-    const tab = activeNeiFavoriteTab();
+    const tab = activeNeiFavoriteTab(neiFavoritesRef.current);
     return new Set(tab.items.map((item) => item.raw));
-  }, [neiFavorites]);
+  }, [neiFavorites, neiFavoritesRef.current.activeTabId]);
   const uploadedDraftRecipeIndexes = useMemo(() => {
     const byOutput = new Map<string, UploadedDraftRecipeMatch>();
     const byIngredient = new Map<string, UploadedDraftRecipeMatch[]>();
@@ -6303,6 +6309,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           availableFavoriteRaws={visibleNeiRawItems}
           onSelectTab={setActiveFavoriteTab}
           onRenameActiveTab={renameActiveFavoriteTab}
+          onRenameTab={renameFavoriteTab}
           onNewTabNameChange={setNewFavoriteTabName}
           onAddTab={addFavoriteTab}
           onDeleteActiveTab={deleteActiveFavoriteTab}
