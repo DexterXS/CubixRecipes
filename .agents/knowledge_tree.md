@@ -31,6 +31,7 @@ Last full rebuild: 2026-06-29
   - `.cubixrecipes_admin/servers/{server_id}/itempanel_icons/`: per-server itempanel icon source.
   - `.cubixrecipes_admin/servers/{server_id}/itempanel_atlas_cache/`: generated itempanel atlas PNG/manifest cache for the server source snapshot.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_draft_templates.json`: shared/admin recipe draft templates.
+  - `.cubixrecipes_admin/servers/{server_id}/recipe_draft_preferences.json`: per-user draft sort/group preferences keyed by normalized email.
   - `.cubixrecipes_admin/servers/{server_id}/recipe_tasks.json`: admin task board.
   - `/data/.cubixrecipes_admin/servers/{server_id}/auction_planner.json` when backend data-dir is configured, otherwise `.cubixrecipes_admin/servers/{server_id}/auction_planner.json`: per-server Auctions day-folder planner state, including folders, lots, selected IDs, UI mode, workflow mode, command stage, saved command-generator modes with per-command enabled/disabled flags, and the persistent lot database under `lotLibrary`.
   - `.cubixrecipes_admin/servers/{server_id}/custom_items/`: backend custom item files.
@@ -176,6 +177,9 @@ Last full rebuild: 2026-06-29
 - `backend/app/storage/recipe_drafts.py`
   - JSON-backed shared/admin draft templates.
   - Class: `RecipeDraftTemplateStore`.
+- `backend/app/storage/recipe_draft_preferences.py`
+  - Atomic JSON-backed per-user recipe-draft sort/group preferences.
+  - Class: `RecipeDraftPreferencesStore`.
 - `backend/app/storage/nei_favorites.py`
   - JSON-backed per-user NEI favorite tabs and hidden patterns.
   - Class: `NeiFavoritesStore`.
@@ -302,6 +306,8 @@ Last full rebuild: 2026-06-29
 - `GET /api/recipe-drafts/templates`
 - `POST /api/recipe-drafts/templates`
 - `DELETE /api/recipe-drafts/templates/{draft_id}`
+- `GET /api/recipe-drafts/preferences`
+- `PUT /api/recipe-drafts/preferences` (requires `templates:create`)
 - `GET /api/settings/project`
 - `PUT /api/settings/project`
 - `PUT /api/settings/project/ui`
@@ -344,7 +350,8 @@ Last full rebuild: 2026-06-29
 - `frontend/src/pages/App.tsx`
   - Central SPA workflow module and current biggest frontend file.
   - Owns editor state, NEI/itempanel loading, local draft caches, cloud `.zs` operations, admin technical panel, item/NBT editor state, recipe navigation, craft-board menu settings, task integration, debug panel wiring, mod icon/itempanel workflows, OreDict, aliases, favorites, user/admin settings, and thin integration for extracted app-shell navigation and icon-surface settings.
-  - Integrates `DraftsWorkspace` for archived-style draft browsing, exact NBT variant selection, primary recipe choices, and batch export.
+  - Integrates `CraftsWorkspace` for the five-zone editor screen and keeps `DraftsWorkspace` available as the transition-period standalone Черновики tab.
+  - Owns account-scoped draft preference hydration/autosave and the temporary suppression of integrated draft panels when opening a draft directly from the standalone tab.
   - Loads cached/bundled itempanel entries immediately; the backend catalog is a background refresh rather than a prerequisite for rendering NEI cells. The browser item catalog snapshot uses an explicit schema version so pre-canonical cached raws are ignored after this migration.
   - Key symbols include `App`, `ItemPanelEntry`, `RecipeType`, `RecipeCraftMode`, `RecipeBindingMode`, `WorkspaceTab`, `LocalDraftPayload`, `DraftGroup`, `ActiveItemInspection`, `buildItemRawValue`, `buildStructuredItemRaw`, `buildNbtRawFromRoot`, `itemPanelRaw`, `itemCatalogEntryToPanelEntry`, `dedupeItemPanelEntries`, `renderItemTooltip`, icon style builders, recipe block collectors, localStorage helpers.
   - Calls most functions through the stable `frontend/src/services/api` barrel.
@@ -403,6 +410,8 @@ Last full rebuild: 2026-06-29
   - Local task default templates and text expansion.
 
 ### Recipe Editor Feature
+- `frontend/src/features/recipe-editor/CraftsWorkspace.tsx`
+  - Owns the fixed desktop five-zone composition: NEI favorites, editor/files, compact NEI, all drafts, and editable previews for recipes of the selected draft.
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.tsx`
   - Owns the editor workspace shell that keeps desktop columns stable while exposing phone-specific NEI/Favorites tab switching.
 - `frontend/src/features/recipe-editor/MobileRecipeWorkspace.test.tsx`
@@ -564,7 +573,7 @@ Last full rebuild: 2026-06-29
 - `frontend/src/pages/App.tsx`
   - Owns the NEI item action menu callbacks, including mobile `...` actions for opening the item recipe and viewing recipe usages.
 - `frontend/src/features/nei-favorites/NeiFavoritesPanel.tsx`
-  - Owns NEI favorite tab presentation, browser-style tab switching, `+` tab creation, and hidden `...` settings UI.
+  - Owns icon-only NEI favorite tab presentation, browser-style tab switching, `+` tab creation, and hidden `...` settings UI; icon assignment is explicit and supports chooser or drag/drop from NEI.
   - Receives favorite profile state and persistence callbacks from `pages/App.tsx`.
 
 ### Frontend Services and Types
@@ -765,11 +774,11 @@ Last full rebuild: 2026-06-29
 - APIs: `/admin/tasks`, `/admin/tasks/{task_id}`, `/admin/tasks/order`, `/admin/tasks/board`.
 
 ### Draft Templates and Custom Items
-- Backend files: `storage/recipe_drafts.py`, `items/custom_items.py`, `api/routes.py`, `api/schemas.py`.
+- Backend files: `storage/recipe_drafts.py`, `storage/recipe_draft_preferences.py`, `items/custom_items.py`, `api/routes.py`, `api/schemas.py`.
 - Frontend files: `pages/App.tsx`, `features/drafts/DraftsWorkspace.tsx`, `components/NbtTreeEditor.tsx`, `services/api/*`, `types/index.ts`.
-- `features/drafts/DraftsWorkspace.tsx` owns the compact draft item grid, primary-recipe ★ state, Ctrl/⌘ multi-selection, and the batch cloud-export selection UI; `pages/App.tsx` owns data loading, exact NBT lookup, and cloud upload orchestration.
-- Data files: `recipe_draft_templates.json`, `custom_items/`.
-- APIs: `/recipe-drafts/templates`, `/items/custom`.
+- `features/drafts/DraftsWorkspace.tsx` owns the compact draft item grid, shared-region rendering, primary-recipe ★ state, editable recipe preview, recipe pagination, Ctrl/⌘ multi-selection, and the batch cloud-export selection UI; `features/drafts/useDraftsWorkspaceState.ts` owns state shared by the separated draft regions; `pages/App.tsx` owns data loading, exact NBT lookup, preference autosave, and cloud upload orchestration.
+- Data files: `recipe_draft_templates.json`, `recipe_draft_preferences.json`, `custom_items/`.
+- APIs: `/recipe-drafts/templates`, `/recipe-drafts/preferences`, `/items/custom`.
 
 ### ZS Cloud and Backups
 - Backend files: `storage/zs_storage.py`, `storage/zs_cloud.py`, `api/routes.py`.
@@ -806,7 +815,7 @@ Last full rebuild: 2026-06-29
 - `debug/debug_service.py` -> config, debug models, domain.
 - `auth/service.py` -> auth database, auth permissions.
 - `auth/access_control.py` -> auth permissions.
-- `storage/recipe_tasks.py`, `storage/recipe_drafts.py`, `storage/nei_favorites.py`, `items/custom_items.py` -> auth permissions.
+- `storage/recipe_tasks.py`, `storage/recipe_drafts.py`, `storage/recipe_draft_preferences.py`, `storage/nei_favorites.py`, `items/custom_items.py` -> auth permissions.
 
 ### Frontend Import Direction
 - `main.tsx` -> `pages/App`, auth gate, server select, debug log, types.

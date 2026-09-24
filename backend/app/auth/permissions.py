@@ -74,6 +74,8 @@ def permission_for_request(method: str, path: str) -> str:
         return 'files:manage'
     if path.startswith('/api/nei/favorites'):
         return 'nei-favorites:manage'
+    if path == '/api/recipe-drafts/preferences':
+        return 'templates:create' if normalized_method != 'GET' else 'view'
     if path.startswith('/api/recipe-drafts/templates'):
         return 'templates:create'
     if normalized_method == 'GET':

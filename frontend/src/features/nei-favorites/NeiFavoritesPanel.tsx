@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { type DragEvent, type ReactNode, useState } from 'react';
 
 import { Panel } from '../../components/Panel';
 import { type NeiFavoriteTab, type NeiFavoritesProfile } from '../../types';
@@ -10,6 +10,8 @@ interface NeiFavoritesPanelProps {
   hiddenPatternsDraft: string;
   newTabName: string;
   renderFavoriteItem: (raw: string) => ReactNode;
+  renderFavoriteTabIcon?: (raw: string) => ReactNode;
+  availableFavoriteRaws?: string[];
   onSelectTab: (tabId: string) => void;
   onRenameActiveTab: (name: string) => void;
   onNewTabNameChange: (name: string) => void;
@@ -17,6 +19,7 @@ interface NeiFavoritesPanelProps {
   onDeleteActiveTab: () => void;
   onFavoriteHotkeyChange: (value: string) => void;
   onHiddenPatternsChange: (value: string) => void;
+  onAssignTabIconRaw?: (tabId: string, raw: string | null) => void;
 }
 
 export function NeiFavoritesPanel({
@@ -26,16 +29,54 @@ export function NeiFavoritesPanel({
   hiddenPatternsDraft,
   newTabName,
   renderFavoriteItem,
+  renderFavoriteTabIcon,
+  availableFavoriteRaws = [],
   onSelectTab,
   onRenameActiveTab,
   onNewTabNameChange,
   onAddTab,
   onDeleteActiveTab,
   onFavoriteHotkeyChange,
-  onHiddenPatternsChange
+  onHiddenPatternsChange,
+  onAssignTabIconRaw
 }: NeiFavoritesPanelProps) {
   const [creatingTab, setCreatingTab] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [iconChangeOpen, setIconChangeOpen] = useState(false);
+
+  const iconRawOptions = Array.from(new Set([
+    ...availableFavoriteRaws,
+    ...(activeTab.iconRaw ? [activeTab.iconRaw] : [])
+  ]));
+
+  const handleSelectTab = (tabId: string) => {
+    onSelectTab(tabId);
+    setIconChangeOpen(false);
+  };
+
+  const handleSettingsToggle = () => {
+    if (settingsOpen) {
+      setIconChangeOpen(false);
+    }
+    setSettingsOpen((current) => !current);
+  };
+
+  const handleTabDragOver = (event: DragEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+  };
+
+  const handleTabDrop = (event: DragEvent<HTMLButtonElement>, tabId: string) => {
+    event.preventDefault();
+    const raw = event.dataTransfer.getData('text/plain').trim();
+    if (raw) {
+      onAssignTabIconRaw?.(tabId, raw);
+    }
+  };
+
+  const handleIconRawChange = (raw: string) => {
+    onAssignTabIconRaw?.(activeTab.id, raw || null);
+  };
 
   const handleAddTab = () => {
     onAddTab();
@@ -47,19 +88,30 @@ export function NeiFavoritesPanel({
       <Panel title="Избранное NEI" subtitle={`Хоткей: ${profile.favoriteHotkey || 'A'}`} className="nei-favorites-panel">
         <div className="favorite-panel-toolbar">
           <div className="favorite-browser-tabs" role="tablist" aria-label="favorite-tabs">
-            {profile.tabs.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={tab.id === profile.activeTabId}
-                className={`favorite-browser-tab ${tab.id === profile.activeTabId ? 'active' : ''}`.trim()}
-                onClick={() => onSelectTab(tab.id)}
-              >
-                <span>{tab.name}</span>
-                <strong>{tab.items.length}</strong>
-              </button>
-            ))}
+            {profile.tabs.map((tab) => {
+              const tabIconRaw = tab.iconRaw || tab.items[0]?.raw || null;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  aria-label={tab.name}
+                  title={tab.name}
+                  aria-selected={tab.id === profile.activeTabId}
+                  className={`favorite-browser-tab ${tab.id === profile.activeTabId ? 'active' : ''} ${iconChangeOpen && tab.id === activeTab.id ? 'icon-drop-target' : ''}`.trim()}
+                  onClick={() => handleSelectTab(tab.id)}
+                  onDragOver={iconChangeOpen && tab.id === activeTab.id ? handleTabDragOver : undefined}
+                  onDrop={iconChangeOpen && tab.id === activeTab.id ? (event) => handleTabDrop(event, tab.id) : undefined}
+                >
+                  {tabIconRaw && renderFavoriteTabIcon ? (
+                    <span className="favorite-browser-tab-icon" aria-hidden="true">
+                      {renderFavoriteTabIcon(tabIconRaw)}
+                    </span>
+                  ) : <span className="favorite-browser-tab-placeholder" aria-hidden="true" />}
+                  <strong>{tab.items.length}</strong>
+                </button>
+              );
+            })}
             <button
               type="button"
               className="favorite-browser-tab favorite-browser-tab-add"
@@ -75,7 +127,7 @@ export function NeiFavoritesPanel({
               className="favorite-settings-trigger"
               aria-label="favorite-settings-menu"
               aria-expanded={settingsOpen}
-              onClick={() => setSettingsOpen((current) => !current)}
+              onClick={handleSettingsToggle}
             >
               ...
             </button>
@@ -110,6 +162,56 @@ export function NeiFavoritesPanel({
                   placeholder="<mod:item> или часть имени"
                 />
               </label>
+              {onAssignTabIconRaw ? (
+                <div className="favorite-icon-settings">
+                  {!iconChangeOpen ? (
+                    <button
+                      type="button"
+                      className="secondary-button"
+                      aria-label="favorite-change-tab-icon"
+                      onClick={() => setIconChangeOpen(true)}
+                    >
+                      Сменить иконку
+                    </button>
+                  ) : (
+                    <>
+                      <label className="field-block">
+                        <span>Иконка вкладки</span>
+                        <select
+                          aria-label="favorite-active-tab-icon-raw"
+                          value={activeTab.iconRaw || ''}
+                          onChange={(event) => handleIconRawChange(event.target.value)}
+                        >
+                          <option value="">Первый предмет вкладки</option>
+                          {iconRawOptions.map((raw) => (
+                            <option key={raw} value={raw}>{raw}</option>
+                          ))}
+                        </select>
+                      </label>
+                      <div
+                        className="favorite-tab-icon-drop-target"
+                        role="button"
+                        tabIndex={0}
+                        aria-label="favorite-tab-icon-drop-target"
+                        title="Перетащите raw предмета на вкладку"
+                        onDragOver={(event) => {
+                          event.preventDefault();
+                          event.dataTransfer.dropEffect = 'copy';
+                        }}
+                        onDrop={(event) => {
+                          event.preventDefault();
+                          const raw = event.dataTransfer.getData('text/plain').trim();
+                          if (raw) {
+                            handleIconRawChange(raw);
+                          }
+                        }}
+                      >
+                        Перетащите raw предмета на вкладку
+                      </div>
+                    </>
+                  )}
+                </div>
+              ) : null}
               <div className="favorite-settings-actions">
                 <button
                   type="button"

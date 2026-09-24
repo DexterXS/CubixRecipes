@@ -49,7 +49,7 @@ class PathProxy:
         return os.fspath(self._get_path_fn())
 
 
-from app.api.schemas import AccessControlRequest, AuctionPlannerRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, ModReplacementRequest, NeiFavoritesRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
+from app.api.schemas import AccessControlRequest, AuctionPlannerRequest, BatchSearchRequest, CloudFileRequest, CreateFileRequest, CreateRecipeRequest, CustomItemRequest, DebugLogEventRequest, IndexScanRequest, IngredientSearchRequest, ItemCaseAliasManualRequest, ModReplacementRequest, NeiFavoritesRequest, ParseRequest, ProjectSettingsRequest, RecipeDraftPreferencesRequest, RecipeDraftTemplateRequest, RecipeTaskBoardRequest, RecipeTaskOrderRequest, RecipeTaskPatchRequest, RecipeTaskRequest, RenameCloudFileRequest, ResolveRequest, RoleUpdateRequest, SaveAsRequest, SearchRequest, UiPreferencesRequest, UpdateRecipeRequest, UploadCloudFileRequest
 from app.auth.access_control import AccessControlStore
 from app.auth.permissions import permission_for_request, role_has_permission
 from app.auth.service import AuthService
@@ -323,6 +323,7 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     item_case_alias_service = ContextProxy(_current_context, 'item_case_alias_service')
     zs_backup_service = ContextProxy(_current_context, 'zs_backup_service')
     recipe_draft_store = ContextProxy(_current_context, 'recipe_draft_store')
+    recipe_draft_preferences_store = ContextProxy(_current_context, 'recipe_draft_preferences_store')
     recipe_task_store = ContextProxy(_current_context, 'recipe_task_store')
     auction_planner_store = ContextProxy(_current_context, 'auction_planner_store')
     nei_favorites_store = ContextProxy(_current_context, 'nei_favorites_store')
@@ -1320,6 +1321,20 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
         except PermissionError as exc:
             raise HTTPException(status_code=403, detail=str(exc)) from exc
         return {'ok': True}
+
+    @router.get('/recipe-drafts/preferences')
+    def get_recipe_draft_preferences(request: Request):
+        user = request.state.auth_user
+        return recipe_draft_preferences_store.get_for_user(user['email'])
+
+    @router.put('/recipe-drafts/preferences')
+    def update_recipe_draft_preferences(request: Request, payload: RecipeDraftPreferencesRequest):
+        user = request.state.auth_user
+        try:
+            preferences = recipe_draft_preferences_store.save_for_user(user['email'], payload.model_dump())
+        except ValueError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
+        return {'ok': True, **preferences}
 
     @router.get('/itempanel/catalog')
     def itempanel_catalog():

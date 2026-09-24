@@ -90,13 +90,15 @@ class NeiFavoritesStore:
                 tab_id = self._tab_id(tab_id, index)
             used_ids.add(tab_id)
             name = str(value.get('name') or '').strip()[:64] or f'Вкладка {index + 1}'
+            icon_raw = str(value.get('iconRaw') or '').strip()[:4096] or None
             tabs.append({
                 'id': tab_id,
                 'name': name,
+                'iconRaw': icon_raw,
                 'items': self._coerce_items(value.get('items')),
             })
         if not tabs:
-            tabs.append({'id': DEFAULT_TAB_ID, 'name': DEFAULT_TAB_NAME, 'items': []})
+            tabs.append({'id': DEFAULT_TAB_ID, 'name': DEFAULT_TAB_NAME, 'iconRaw': None, 'items': []})
         return tabs
 
     def _coerce_items(self, raw: Any) -> list[dict[str, Any]]:

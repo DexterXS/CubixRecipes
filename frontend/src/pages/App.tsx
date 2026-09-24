@@ -25,7 +25,7 @@ import { DraftsWorkspace, type DraftCloudSelection } from '../features/drafts/Dr
 import { ModReplacementPanel } from '../features/diagnostics/ModReplacementPanel';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
-import { MobileRecipeWorkspace } from '../features/recipe-editor/MobileRecipeWorkspace';
+import { CraftsWorkspace } from '../features/recipe-editor/CraftsWorkspace';
 import { cloneMatrix, craftModeFromRecipeType, matrixForRecipeSource, maxGridWidth, normalizeGridSize, recipeTypeFromCraftMode, resizeMatrix, toCellMatrix, type RecipeBindingMode, type RecipeCraftMode, type RecipeType } from '../features/recipe-editor/recipeMatrix';
 import { TechnicalPanelShell, type DiagnosticsSectionId, type TechnicalPanelSection } from '../features/diagnostics/TechnicalPanelShell';
 import { DiagnosticsAccessPanel } from '../features/diagnostics/DiagnosticsAccessPanel';
@@ -38,7 +38,7 @@ import { DiagnosticsRuntimePanel } from '../features/diagnostics/DiagnosticsRunt
 import { type DebugEventCategory, type DebugEventDetails, type DebugEventItem, type DebugEventLevel } from '../features/diagnostics/DebugEventsList';
 import { apiPath, getBackendTargetHint, getItemPanelFallbackToFirstMetaEnabled } from '../config/runtime';
 import { createTranslator, getPanelLabel, getTabLabel } from '../i18n';
-import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getAtlasV2Index, getItemCaseAliasReport, getItemCatalog, getItemCatalogVersion, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload } from '../services/api';
+import { ApiConflictError, cleanModIconArchive, createRecipeTask, createRecipeTemplate, deleteCustomItem, deleteModIconArchive, deleteRecipeDraftTemplate, deleteZsCloudFile, downloadZsCloudBackup, downloadZsCloudFile, generateItemCaseAliasReport, generateModIconAtlases, getAccessControlSettings, getAtlasV2Index, getItemCaseAliasReport, getItemCatalog, getItemCatalogVersion, getItemPanelAtlas, getItemPanelMergedCsvUrl, getModIconAdminStatus, getModIconArchiveDownloadUrl, getModIconAtlasManifest, getNeiFavorites, getProjectSettings, getOreDictGroups, getRecipeDraftPreferences, listCustomItems, listRecipeDraftTemplates, listRecipeTasks, listUsers, listZsCloudBackups, listZsCloudFiles, mergeItemPanelFiles, parseText, renameZsCloudFile, resolveItemRaw, saveCustomItem, saveManualItemCaseAlias, saveNeiFavorites, saveRecipeAs, saveRecipeDraftPreferences, saveRecipeDraftTemplate, searchRecipesByOutput, searchRecipesByOutputs, searchRecipesUsingItem, updateAccessControlSettings, updateProjectSettings, updateProjectUiPreferences, updateRecipe, updateUserRole, uploadItemCaseAliasFmlLog, uploadItemPanelCsv, uploadItemPanelJson, uploadModIconArchive, uploadOreDictFile, uploadZsCloudFile, scanModReplacement, replaceModItems, listServers, type RecipeTaskPayload, type RecipeDraftPreferences } from '../services/api';
 import { buildItemAssetCacheScope, readCachedItemPanelAtlas, releaseCachedItemPanelAtlas, writeCachedItemPanelAtlas } from '../services/itemAssetCache';
 import { buildBootstrapCacheScope, hydrateCachedItemPanelCatalog, hydrateCachedNeiFavorites, readCachedNeiFavorites, writeCachedItemPanelCatalog, writeCachedNeiFavorites } from '../services/bootstrapCache';
 import { clearCachedModIconAtlas, getModIconAtlasRevision, readCachedModIconAtlas, releaseCachedModIconAtlas, writeCachedModIconAtlas } from '../services/modIconAssetCache';
@@ -117,7 +117,7 @@ const defaultNeiFavoritesProfile: NeiFavoritesProfile = {
   activeTabId: 'default',
   favoriteHotkey: 'A',
   hiddenPatterns: [],
-  tabs: [{ id: 'default', name: 'Основное', items: [] }]
+  tabs: [{ id: 'default', name: 'Основное', iconRaw: null, items: [] }]
 };
 
 const defaultRecipe: RecipeView = {
@@ -285,6 +285,7 @@ const OREDICT_ICON_PRIORITY_STORAGE_KEY = 'cubixrecipes_oredict_icon_priority';
 const DEBUG_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-filters:v1';
 const DEBUG_LEVEL_FILTERS_STORAGE_KEY = 'cubixrecipes:debug-level-filters:v1';
 const RECIPE_DRAFT_STORAGE_PREFIX = 'cubixrecipes:recipe-drafts:v1';
+const RECIPE_DRAFT_PREFERENCES_STORAGE_PREFIX = 'cubixrecipes:recipe-draft-preferences:v1';
 const CUSTOM_ITEMS_STORAGE_PREFIX = 'cubixrecipes:custom-items:v1';
 const REMOVE_TEMPLATE_STORAGE_KEY = 'cubixrecipes:remove-templates:v1';
 const REMOVE_TEMPLATE_SELECTION_STORAGE_KEY = 'cubixrecipes:remove-template-selection:v1';
@@ -557,6 +558,34 @@ function persistSharedCraftDraftEnabled(enabled: boolean): void {
 
 function recipeDraftStorageKey(email: string): string {
   return `${RECIPE_DRAFT_STORAGE_PREFIX}:${localDraftUserHash(email)}`;
+}
+
+function recipeDraftPreferencesStorageKey(email: string): string {
+  return `${RECIPE_DRAFT_PREFERENCES_STORAGE_PREFIX}:${localDraftUserHash(email)}`;
+}
+
+function loadLocalRecipeDraftPreferences(email: string): RecipeDraftPreferences {
+  const defaults: RecipeDraftPreferences = { sortMode: 'date-desc', groupMode: 'none' };
+  try {
+    const raw = window.localStorage.getItem(recipeDraftPreferencesStorageKey(email));
+    const value = raw ? JSON.parse(raw) as Partial<RecipeDraftPreferences> : {};
+    const sortModes: RecipeDraftPreferences['sortMode'][] = ['date-desc', 'date-asc', 'drafts-desc', 'drafts-asc', 'name'];
+    const groupModes: RecipeDraftPreferences['groupMode'][] = ['none', 'mod', 'author', 'date', 'grid-size'];
+    return {
+      sortMode: sortModes.includes(value.sortMode as RecipeDraftPreferences['sortMode']) ? value.sortMode as RecipeDraftPreferences['sortMode'] : defaults.sortMode,
+      groupMode: groupModes.includes(value.groupMode as RecipeDraftPreferences['groupMode']) ? value.groupMode as RecipeDraftPreferences['groupMode'] : defaults.groupMode
+    };
+  } catch {
+    return defaults;
+  }
+}
+
+function persistLocalRecipeDraftPreferences(email: string, preferences: RecipeDraftPreferences): void {
+  try {
+    window.localStorage.setItem(recipeDraftPreferencesStorageKey(email), JSON.stringify(preferences));
+  } catch {
+    // Local preferences remain best-effort when storage is unavailable.
+  }
 }
 
 function customItemsStorageKey(email: string): string {
@@ -1339,6 +1368,7 @@ function normalizeNeiFavoritesProfile(profile?: Partial<NeiFavoritesProfile> | n
     .map((tab, index) => ({
       id: String(tab?.id || `tab-${index + 1}`).trim() || `tab-${index + 1}`,
       name: String(tab?.name || `Вкладка ${index + 1}`).trim().slice(0, 64) || `Вкладка ${index + 1}`,
+      iconRaw: typeof tab?.iconRaw === 'string' ? tab.iconRaw.trim().slice(0, 4096) || null : null,
       items: Array.isArray(tab?.items)
         ? tab.items
           .map((item) => ({
@@ -1536,9 +1566,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const [removeTemplateSelection, setRemoveTemplateSelection] = useState<Record<string, string>>(() => loadRemoveTemplateSelection());
   const [removeTemplateDraft, setRemoveTemplateDraft] = useState('recipes.remove({output_wildcard});');
   const [selectedDraftItemRaw, setSelectedDraftItemRaw] = useState<string | null>(null);
+  const [integratedDraftsSuppressed, setIntegratedDraftsSuppressed] = useState(false);
   const [draftItemSearchQuery, setDraftItemSearchQuery] = useState('');
-  const [draftItemSortMode, setDraftItemSortMode] = useState<DraftItemSortMode>('drafts-desc');
-  const [draftItemGroupMode, setDraftItemGroupMode] = useState<DraftItemGroupMode>('none');
+  const [draftItemSortMode, setDraftItemSortMode] = useState<DraftItemSortMode>(() => loadLocalRecipeDraftPreferences(authUser.email).sortMode);
+  const [draftItemGroupMode, setDraftItemGroupMode] = useState<DraftItemGroupMode>(() => loadLocalRecipeDraftPreferences(authUser.email).groupMode);
+  const [draftPreferencesStatus, setDraftPreferencesStatus] = useState('');
   const [collapsedDraftGroups, setCollapsedDraftGroups] = useState<Record<string, boolean>>({});
   const [draftItemPage, setDraftItemPage] = useState(0);
   const [draftTemplateContextMenu, setDraftTemplateContextMenu] = useState<DraftTemplateContextMenuState | null>(null);
@@ -2356,6 +2388,12 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }, [workspaceTab, canUseTechnicalPanel]);
 
   useEffect(() => {
+    if (workspaceTab !== 'editor') {
+      setIntegratedDraftsSuppressed(false);
+    }
+  }, [workspaceTab]);
+
+  useEffect(() => {
     if (workspaceTab === 'auctions' && !canUseAuctions) {
       setWorkspaceTab('editor');
     }
@@ -2421,6 +2459,48 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   useEffect(() => {
     persistRecipeDraftTemplates(authUser.email, recipeDraftTemplates);
   }, [authUser.email, recipeDraftTemplates]);
+
+  useEffect(() => {
+    if (!canCreateTemplates && !canEditRecipes) {
+      return undefined;
+    }
+    let cancelled = false;
+    async function loadRecipeDraftPreferences() {
+      try {
+        const preferences = await getRecipeDraftPreferences();
+        if (!cancelled) {
+          setDraftItemSortMode(preferences.sortMode);
+          setDraftItemGroupMode(preferences.groupMode);
+          persistLocalRecipeDraftPreferences(authUser.email, preferences);
+        }
+      } catch (error) {
+        logFrontendEvent({
+          level: 'WARN',
+          category: 'RECIPE_DRAFTS',
+          message: 'Recipe draft preferences unavailable; using local preference',
+          details: { error: error instanceof Error ? error.message : String(error) }
+        });
+      }
+    }
+    void loadRecipeDraftPreferences();
+    return () => {
+      cancelled = true;
+    };
+  }, [authUser.email, canCreateTemplates, canEditRecipes]);
+
+  function updateRecipeDraftPreferences(next: Partial<RecipeDraftPreferences>) {
+    const preferences: RecipeDraftPreferences = {
+      sortMode: next.sortMode ?? draftItemSortMode,
+      groupMode: next.groupMode ?? draftItemGroupMode
+    };
+    setDraftItemSortMode(preferences.sortMode);
+    setDraftItemGroupMode(preferences.groupMode);
+    persistLocalRecipeDraftPreferences(authUser.email, preferences);
+    setDraftPreferencesStatus('Сохраняю настройки…');
+    void saveRecipeDraftPreferences(preferences)
+      .then(() => setDraftPreferencesStatus('Настройки сохранены'))
+      .catch(() => setDraftPreferencesStatus('Сохранено локально'));
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -3410,6 +3490,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     updateNeiFavoritesProfile((current) => ({ ...current, activeTabId: tabId }));
   }
 
+  function assignFavoriteTabIcon(tabId: string, raw: string | null) {
+    const normalizedRaw = raw?.trim() || null;
+    updateNeiFavoritesProfile((current) => ({
+      ...current,
+      tabs: current.tabs.map((tab) => tab.id === tabId ? { ...tab, iconRaw: normalizedRaw } : tab)
+    }));
+  }
+
   function renameActiveFavoriteTab(name: string) {
     updateNeiFavoritesProfile((current) => ({
       ...current,
@@ -3419,7 +3507,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function addFavoriteTab() {
     const name = newFavoriteTabName.trim().slice(0, 64) || `Вкладка ${neiFavoritesRef.current.tabs.length + 1}`;
-    const tab = { id: nextFavoriteTabId(), name, items: [] };
+    const tab = { id: nextFavoriteTabId(), name, iconRaw: null, items: [] };
     setNewFavoriteTabName('');
     updateNeiFavoritesProfile((current) => ({
       ...current,
@@ -5645,6 +5733,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function openRecipeDraftTemplate(draft: RecipeDraftTemplate) {
     applyRecipe(draft.recipe, draft.sourceText, { rememberCurrent: true });
+    setIntegratedDraftsSuppressed(true);
     setWorkspaceTab('editor');
     setHeldItemRaw(null);
     setDraftTemplateContextMenu(null);
@@ -6210,6 +6299,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           hiddenPatternsDraft={neiHiddenPatternsDraft}
           newTabName={newFavoriteTabName}
           renderFavoriteItem={renderNeiFavoriteItem}
+          renderFavoriteTabIcon={(raw) => renderCraftItemIcon(raw, undefined, false, undefined, resolveCellTitle(raw))}
+          availableFavoriteRaws={visibleNeiRawItems}
           onSelectTab={setActiveFavoriteTab}
           onRenameActiveTab={renameActiveFavoriteTab}
           onNewTabNameChange={setNewFavoriteTabName}
@@ -6217,6 +6308,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           onDeleteActiveTab={deleteActiveFavoriteTab}
           onFavoriteHotkeyChange={updateFavoriteHotkey}
           onHiddenPatternsChange={updateNeiHiddenPatterns}
+          onAssignTabIconRaw={assignFavoriteTabIcon}
         />
       </IconSurfaceSettingsHost>
     );
@@ -7894,6 +7986,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           selectedDraftTemplates={selectedDraftTemplates}
           itemPanelAtlas={itemPanelAtlas}
           draftPreviewAtlasUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''}
+          heldItemRaw={heldItemRaw}
+          draftPreferencesStatus={draftPreferencesStatus}
           displayMode={uiPreferences.display_mode}
           animationsEnabled={areAnimationsEnabled}
           canManageCloudFiles={canManageCloudFiles}
@@ -7905,8 +7999,8 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           getRecipeAvailability={getRecipeAvailability}
           onSelectDraftItem={setSelectedDraftItemRaw}
           onChangeDraftSearch={setDraftItemSearchQuery}
-          onChangeDraftSort={(value) => setDraftItemSortMode(value as DraftItemSortMode)}
-          onChangeDraftGroup={(value) => setDraftItemGroupMode(value as DraftItemGroupMode)}
+          onChangeDraftSort={(value) => updateRecipeDraftPreferences({ sortMode: value as DraftItemSortMode })}
+          onChangeDraftGroup={(value) => updateRecipeDraftPreferences({ groupMode: value as DraftItemGroupMode })}
           onChangeDraftPage={(delta) => changeDraftItemPage(delta >= 0 ? 1 : -1)}
           onToggleDraftGroup={(key) => setCollapsedDraftGroups((current) => ({ ...current, [key]: !current[key] }))}
           onOpenDraft={openRecipeDraftTemplate}
@@ -7944,12 +8038,50 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       return renderTechnicalWorkspace();
     }
     return (
-      <MobileRecipeWorkspace
-        canUseNeiFavorites={canUseNeiFavorites}
+      <CraftsWorkspace
+        favoritesPanel={canUseNeiFavorites ? renderNeiFavoritesPanel() : null}
         recipeBuilder={renderRecipeBuilderPanel()}
         recipeFiles={renderRecipeFilesPanel()}
         neiPanel={renderNeiPanel()}
-        neiFavoritesPanel={canUseNeiFavorites ? renderNeiFavoritesPanel() : undefined}
+        draftPanels={!integratedDraftsSuppressed && (canCreateTemplates || canEditRecipes) ? (
+          <DraftsWorkspace
+            layout="regions"
+            email={authUser.email}
+            selectedDraftItemRaw={selectedDraftItemRaw}
+            draftItemEntries={draftItemEntries}
+            groupedDraftItems={groupedDraftItems}
+            draftItemSearchQuery={draftItemSearchQuery}
+            draftItemSortMode={draftItemSortMode}
+            draftItemGroupMode={draftItemGroupMode}
+            draftPreferencesStatus={draftPreferencesStatus}
+            collapsedDraftGroups={collapsedDraftGroups}
+            draftItemPage={draftItemPage}
+            draftItemPageCount={draftItemPageCount}
+            selectedDraftTemplates={selectedDraftTemplates}
+            itemPanelAtlas={itemPanelAtlas}
+            draftPreviewAtlasUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''}
+            heldItemRaw={heldItemRaw}
+            displayMode={uiPreferences.display_mode}
+            animationsEnabled={areAnimationsEnabled}
+            canManageCloudFiles={canManageCloudFiles}
+            resolveCellTitle={resolveCellTitle}
+            renderDraftCatalogIcon={renderDraftCatalogIcon}
+            renderCraftItemIcon={renderCraftItemIcon}
+            renderItemTooltip={renderItemTooltip}
+            resolveRecipeGridIconStyle={resolveRecipeGridIconStyle}
+            getRecipeAvailability={getRecipeAvailability}
+            onSelectDraftItem={setSelectedDraftItemRaw}
+            onChangeDraftSearch={setDraftItemSearchQuery}
+            onChangeDraftSort={(value) => updateRecipeDraftPreferences({ sortMode: value as DraftItemSortMode })}
+            onChangeDraftGroup={(value) => updateRecipeDraftPreferences({ groupMode: value as DraftItemGroupMode })}
+            onChangeDraftPage={(delta) => changeDraftItemPage(delta >= 0 ? 1 : -1)}
+            onToggleDraftGroup={(key) => setCollapsedDraftGroups((current) => ({ ...current, [key]: !current[key] }))}
+            onOpenDraft={openRecipeDraftTemplate}
+            onOpenDraftContextMenu={(draftId, x, y) => setDraftTemplateContextMenu({ draftId, x, y })}
+            onExportDrafts={handleDraftBatchExport}
+            onItemHover={updateHoveredItemRaw}
+          />
+        ) : null}
       />
     );
   }

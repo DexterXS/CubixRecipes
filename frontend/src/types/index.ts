@@ -248,6 +248,7 @@ export interface NeiFavoriteItem {
 export interface NeiFavoriteTab {
   id: string;
   name: string;
+  iconRaw?: string | null;
   items: NeiFavoriteItem[];
 }
 

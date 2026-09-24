@@ -14,6 +14,7 @@ from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
 from app.items.item_catalog import ItemCatalogService
 from app.resolver.item_resolver import ItemResolver
 from app.storage.recipe_drafts import RecipeDraftTemplateStore
+from app.storage.recipe_draft_preferences import RecipeDraftPreferencesStore
 from app.storage.recipe_tasks import RecipeTaskStore
 from app.storage.nei_favorites import NeiFavoritesStore
 from app.storage.auction_planner import AuctionPlannerStore
@@ -103,6 +104,7 @@ class ServerContext:
         )
         self.zs_backup_service = ZsCloudBackupService(self.admin_data_dir / 'secret_zs_backups')
         self.recipe_draft_store = RecipeDraftTemplateStore(self.admin_data_dir / 'recipe_draft_templates.json')
+        self.recipe_draft_preferences_store = RecipeDraftPreferencesStore(self.admin_data_dir / 'recipe_draft_preferences.json')
         self.recipe_task_store = RecipeTaskStore(self.admin_data_dir / 'recipe_tasks.json')
         self.auction_planner_store = AuctionPlannerStore(self.admin_data_dir / 'auction_planner.json')
         self.nei_favorites_store = NeiFavoritesStore(self.runtime_data_dir / 'nei_favorites.json')

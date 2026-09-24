@@ -73,6 +73,11 @@ class RecipeDraftTemplateRequest(BaseModel):
     name: str = Field(min_length=1, max_length=255)
 
 
+class RecipeDraftPreferencesRequest(BaseModel):
+    sortMode: Literal['date-desc', 'date-asc', 'drafts-desc', 'drafts-asc', 'name']
+    groupMode: Literal['none', 'mod', 'author', 'date', 'grid-size']
+
+
 class RecipeTaskRequest(BaseModel):
     itemRaw: str = Field(default='', max_length=1024)
     itemTitle: str = Field(default='', max_length=255)
@@ -127,6 +132,7 @@ class NeiFavoriteItemRequest(BaseModel):
 class NeiFavoriteTabRequest(BaseModel):
     id: str = Field(default='', max_length=64)
     name: str = Field(default='Основное', max_length=64)
+    iconRaw: str | None = Field(default=None, max_length=4096)
     items: list[NeiFavoriteItemRequest] = Field(default_factory=list, max_length=512)
 
 

@@ -25,6 +25,14 @@ interface RecipeDraftTemplatePayload {
   name: string;
 }
 
+export type RecipeDraftSortMode = 'date-desc' | 'date-asc' | 'drafts-desc' | 'drafts-asc' | 'name';
+export type RecipeDraftGroupMode = 'none' | 'mod' | 'author' | 'date' | 'grid-size';
+
+export interface RecipeDraftPreferences {
+  sortMode: RecipeDraftSortMode;
+  groupMode: RecipeDraftGroupMode;
+}
+
 export async function resolveItemRaw(raw: string): Promise<ResolveItemResponse> {
   return request<ResolveItemResponse>(apiPath('/items/resolve'), {
     method: 'POST',
@@ -51,6 +59,18 @@ export async function deleteCustomItem(itemId: number): Promise<{ ok: boolean }>
 
 export async function listRecipeDraftTemplates(): Promise<{ templates: RecipeDraftTemplate[] }> {
   return request<{ templates: RecipeDraftTemplate[] }>(apiPath('/recipe-drafts/templates'));
+}
+
+export async function getRecipeDraftPreferences(): Promise<RecipeDraftPreferences> {
+  return request<RecipeDraftPreferences>(apiPath('/recipe-drafts/preferences'));
+}
+
+export async function saveRecipeDraftPreferences(payload: RecipeDraftPreferences): Promise<{ ok: boolean } & RecipeDraftPreferences> {
+  return request<{ ok: boolean } & RecipeDraftPreferences>(apiPath('/recipe-drafts/preferences'), {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
 }
 
 export async function saveRecipeDraftTemplate(payload: RecipeDraftTemplatePayload): Promise<{ ok: boolean; template: RecipeDraftTemplate }> {
