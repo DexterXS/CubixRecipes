@@ -454,16 +454,19 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 8px 
   width: min(100%, 1780px);
   max-width: 1780px;
   margin: 0 auto;
-  grid-template-columns: minmax(260px, fit-content(360px)) minmax(620px, 1fr) minmax(300px, fit-content(390px));
-  grid-template-rows: auto auto;
+  grid-template-columns: minmax(300px, fit-content(360px)) minmax(760px, 1fr) minmax(300px, fit-content(360px));
+  grid-template-rows: auto;
   gap: 8px;
   align-items: start;
   align-content: start;
 }
-.workspace-layout-crafts > .crafts-region { min-width: 0; min-height: 0; display: flex; align-self: start; }
-.workspace-layout-crafts > .crafts-region > .workspace-panel-shell,
-.workspace-layout-crafts > .crafts-region > .workspace-column,
-.workspace-layout-crafts > .crafts-region > .workspace-column > .workspace-panel-shell { width: 100%; min-width: 0; min-height: 0; }
+.workspace-layout-crafts > .crafts-side-column,
+.workspace-layout-crafts > .crafts-region { min-width: 0; min-height: 0; align-self: start; }
+.workspace-layout-crafts > .crafts-side-column { display: grid; align-content: start; gap: 8px; }
+.workspace-layout-crafts .crafts-region,
+.workspace-layout-crafts .crafts-region > .workspace-panel-shell,
+.workspace-layout-crafts .crafts-region > .workspace-column,
+.workspace-layout-crafts .crafts-region > .workspace-column > .workspace-panel-shell { width: 100%; min-width: 0; min-height: 0; }
 .workspace-layout-crafts .panel { min-height: 0; }
 .workspace-layout-crafts .panel-header { padding: 9px 10px 0; }
 .workspace-layout-crafts .panel-body { padding: 9px 10px 10px; gap: 8px; }
@@ -472,16 +475,15 @@ main.app-shell { --ui-scale: 1; max-width: 1920px; margin: 0 auto; padding: 8px 
 .workspace-layout-crafts .favorite-items,
 .workspace-layout-crafts .draft-item-list,
 .workspace-layout-crafts .draft-template-list { width: 100%; min-width: 0; }
-.crafts-favorites-region { grid-column: 1; grid-row: 1; }
-.crafts-drafts-region { grid-column: 1; grid-row: 2; }
-.crafts-center-region { grid-column: 2; grid-row: 1 / span 2; display: grid !important; grid-template-rows: auto auto; gap: 8px; align-items: start; align-content: start; }
-.crafts-nei-region { grid-column: 3; grid-row: 1; }
-.crafts-templates-region { grid-column: 3; grid-row: 2; }
+.crafts-left-column { grid-column: 1; grid-row: 1; }
+.crafts-center-region { grid-column: 2; grid-row: 1; display: grid !important; grid-template-rows: auto auto; gap: 8px; align-items: start; align-content: start; }
+.crafts-right-column { grid-column: 3; grid-row: 1; }
 .crafts-center-region > .workspace-panel-shell { min-height: 0; }
 .crafts-center-region .desktop-recipe-files { min-width: 0; margin-top: 0; }
 .workspace-favorites { position: sticky; top: 14px; }
 @media (max-width: 1280px) {
   .workspace-layout-crafts { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+  .workspace-layout-crafts > .crafts-side-column,
   .workspace-layout-crafts > .crafts-region { grid-column: 1; grid-row: auto; }
   .crafts-center-region { grid-template-rows: auto; }
 }

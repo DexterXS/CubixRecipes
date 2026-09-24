@@ -21,7 +21,7 @@ import { IconSurfaceSettingsProvider } from '../features/icon-settings/IconSurfa
 import { defaultIconSurfaceSettings, defaultMobileIconSurfaceSettings, normalizeIconSurfaceSettings, patchIconSurfaceSettings, type IconSurfaceId, type IconSurfaceSettings } from '../features/icon-settings/iconSurfaces';
 import { useIconSurfaceCssVars } from '../features/icon-settings/useIconViewport';
 import { ItemTextureToolsPanel, type ItemPanelModSummary } from '../features/item-catalog/ItemTextureToolsPanel';
-import { DraftsWorkspace, type DraftCloudSelection } from '../features/drafts/DraftsWorkspace';
+import { DraftsWorkspace, DraftsWorkspaceStateProvider, type DraftCloudSelection } from '../features/drafts/DraftsWorkspace';
 import { ModReplacementPanel } from '../features/diagnostics/ModReplacementPanel';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
@@ -8037,53 +8037,58 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (workspaceTab === 'technical' && canUseTechnicalPanel) {
       return renderTechnicalWorkspace();
     }
-    return (
+    const integratedDraftsEnabled = !integratedDraftsSuppressed && (canCreateTemplates || canEditRecipes);
+    const integratedDraftProps = {
+      email: authUser.email,
+      selectedDraftItemRaw,
+      draftItemEntries,
+      groupedDraftItems,
+      draftItemSearchQuery,
+      draftItemSortMode,
+      draftItemGroupMode,
+      draftPreferencesStatus,
+      collapsedDraftGroups,
+      draftItemPage,
+      draftItemPageCount,
+      selectedDraftTemplates,
+      itemPanelAtlas,
+      draftPreviewAtlasUrl: itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : '',
+      heldItemRaw,
+      displayMode: uiPreferences.display_mode,
+      animationsEnabled: areAnimationsEnabled,
+      canManageCloudFiles,
+      resolveCellTitle,
+      renderDraftCatalogIcon,
+      renderCraftItemIcon,
+      renderItemTooltip,
+      resolveRecipeGridIconStyle,
+      getRecipeAvailability,
+      onSelectDraftItem: setSelectedDraftItemRaw,
+      onChangeDraftSearch: setDraftItemSearchQuery,
+      onChangeDraftSort: (value: string) => updateRecipeDraftPreferences({ sortMode: value as DraftItemSortMode }),
+      onChangeDraftGroup: (value: string) => updateRecipeDraftPreferences({ groupMode: value as DraftItemGroupMode }),
+      onChangeDraftPage: (delta: number) => changeDraftItemPage(delta >= 0 ? 1 : -1),
+      onToggleDraftGroup: (key: string) => setCollapsedDraftGroups((current) => ({ ...current, [key]: !current[key] })),
+      onOpenDraft: openRecipeDraftTemplate,
+      onOpenDraftContextMenu: (draftId: string, x: number, y: number) => setDraftTemplateContextMenu({ draftId, x, y }),
+      onExportDrafts: handleDraftBatchExport,
+      onItemHover: updateHoveredItemRaw
+    };
+    const craftsWorkspace = (
       <CraftsWorkspace
         favoritesPanel={canUseNeiFavorites ? renderNeiFavoritesPanel() : null}
         recipeBuilder={renderRecipeBuilderPanel()}
         recipeFiles={renderRecipeFilesPanel()}
         neiPanel={renderNeiPanel()}
-        draftPanels={!integratedDraftsSuppressed && (canCreateTemplates || canEditRecipes) ? (
-          <DraftsWorkspace
-            layout="regions"
-            email={authUser.email}
-            selectedDraftItemRaw={selectedDraftItemRaw}
-            draftItemEntries={draftItemEntries}
-            groupedDraftItems={groupedDraftItems}
-            draftItemSearchQuery={draftItemSearchQuery}
-            draftItemSortMode={draftItemSortMode}
-            draftItemGroupMode={draftItemGroupMode}
-            draftPreferencesStatus={draftPreferencesStatus}
-            collapsedDraftGroups={collapsedDraftGroups}
-            draftItemPage={draftItemPage}
-            draftItemPageCount={draftItemPageCount}
-            selectedDraftTemplates={selectedDraftTemplates}
-            itemPanelAtlas={itemPanelAtlas}
-            draftPreviewAtlasUrl={itemPanelAtlas ? normalizeAtlasImageUrl(itemPanelAtlas.image_url) : ''}
-            heldItemRaw={heldItemRaw}
-            displayMode={uiPreferences.display_mode}
-            animationsEnabled={areAnimationsEnabled}
-            canManageCloudFiles={canManageCloudFiles}
-            resolveCellTitle={resolveCellTitle}
-            renderDraftCatalogIcon={renderDraftCatalogIcon}
-            renderCraftItemIcon={renderCraftItemIcon}
-            renderItemTooltip={renderItemTooltip}
-            resolveRecipeGridIconStyle={resolveRecipeGridIconStyle}
-            getRecipeAvailability={getRecipeAvailability}
-            onSelectDraftItem={setSelectedDraftItemRaw}
-            onChangeDraftSearch={setDraftItemSearchQuery}
-            onChangeDraftSort={(value) => updateRecipeDraftPreferences({ sortMode: value as DraftItemSortMode })}
-            onChangeDraftGroup={(value) => updateRecipeDraftPreferences({ groupMode: value as DraftItemGroupMode })}
-            onChangeDraftPage={(delta) => changeDraftItemPage(delta >= 0 ? 1 : -1)}
-            onToggleDraftGroup={(key) => setCollapsedDraftGroups((current) => ({ ...current, [key]: !current[key] }))}
-            onOpenDraft={openRecipeDraftTemplate}
-            onOpenDraftContextMenu={(draftId, x, y) => setDraftTemplateContextMenu({ draftId, x, y })}
-            onExportDrafts={handleDraftBatchExport}
-            onItemHover={updateHoveredItemRaw}
-          />
-        ) : null}
+        draftItemsPanel={integratedDraftsEnabled ? <DraftsWorkspace {...integratedDraftProps} region="items" /> : null}
+        draftTemplatesPanel={integratedDraftsEnabled ? <DraftsWorkspace {...integratedDraftProps} region="recipes" /> : null}
       />
     );
+    return integratedDraftsEnabled ? (
+      <DraftsWorkspaceStateProvider email={authUser.email} selectedDraftItemRaw={selectedDraftItemRaw} selectedDraftTemplates={selectedDraftTemplates}>
+        {craftsWorkspace}
+      </DraftsWorkspaceStateProvider>
+    ) : craftsWorkspace;
   }
 
   function renderPanel(panel: PanelLayoutItem) {
