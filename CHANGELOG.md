@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Fixed editing NBT recipe drafts from the Drafts workspace by initializing the item-panel raw lookup before title and recipe-grid resolution runs.
 - Fixed the React `#185` NEI crash by preventing equivalent icon-mod selection and tooltip-position state updates from starting a render loop while item icons load.
 - Fixed the NEI held-item cursor drifting to the bottom of the workspace after icon-placement CSS changes by keeping its viewport-fixed positioning intact.
 - Fixed the production NEI repeat-click crash (`Cannot access 'Vd' before initialization`) by keeping the Atlas registry readiness calculation inside its memoized lookup builder.

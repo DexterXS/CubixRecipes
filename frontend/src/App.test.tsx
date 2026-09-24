@@ -1883,6 +1883,10 @@ test('draft titles resolve the exact NBT variant when catalog item casing differ
   const preview = screen.getByLabelText('draft-template-preview');
   expect(within(preview).getByText('Золотой Наземный Детектор #99')).toBeTruthy();
   expect(within(preview).queryByText('Железный Наземный Детектор #99')).toBeFalsy();
+
+  fireEvent.click(within(preview).getByLabelText('edit-selected-draft-template'));
+  expect(craftOutputRaw()).toBe(exactRaw);
+  expect(screen.queryByText('CubixRecipes: ошибка интерфейса')).toBeFalsy();
 });
 test('admin can browse recipe draft templates created by moderators', async () => {
   mockRecipeDraftTemplates = [{

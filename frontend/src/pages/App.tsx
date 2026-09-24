@@ -2698,6 +2698,17 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     [itemModDraft, itemNameDraft, itemMetaDraft, nbtRootDraft, itemCaseAliases]
   );
   const outputDisplayNameFromResolver = recipe.output_resolution?.display_name;
+  const customItemEntries = useMemo(() => customItems.map(customItemToEntry), [customItems]);
+  const neiCatalogEntries = useMemo(() => [...itemPanelTranslations.entries, ...customItemEntries], [customItemEntries, itemPanelTranslations.entries]);
+  const itemPanelEntryByRaw = useMemo(() => {
+    const byRaw = new Map<string, ItemPanelEntry>();
+    neiCatalogEntries.forEach((entry) => {
+      const raw = itemPanelRaw(entry);
+      byRaw.set(raw, entry);
+      byRaw.set(itemRawLookupIdentity(raw), entry);
+    });
+    return byRaw;
+  }, [neiCatalogEntries]);
   const filledCells = useMemo(() => matrix.flat().filter((cell) => cell && cell !== 'null').length, [matrix]);
   const nullCells = useMemo(() => matrix.flat().filter((cell) => !cell || cell === 'null').length, [matrix]);
   const unresolvedCells = useMemo(() => matrix.flat().filter((cell) => cell && !String(cell).startsWith('<')).length, [matrix]);
@@ -3657,17 +3668,6 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     });
   }, [itemPanelModSummaries]);
 
-  const customItemEntries = useMemo(() => customItems.map(customItemToEntry), [customItems]);
-  const neiCatalogEntries = useMemo(() => [...itemPanelTranslations.entries, ...customItemEntries], [customItemEntries, itemPanelTranslations.entries]);
-  const itemPanelEntryByRaw = useMemo(() => {
-    const byRaw = new Map<string, ItemPanelEntry>();
-    neiCatalogEntries.forEach((entry) => {
-      const raw = itemPanelRaw(entry);
-      byRaw.set(raw, entry);
-      byRaw.set(itemRawLookupIdentity(raw), entry);
-    });
-    return byRaw;
-  }, [neiCatalogEntries]);
   const taskItemOptions = useMemo<RecipeTaskItemOption[]>(() => {
     const unique = new Map<string, RecipeTaskItemOption>();
     neiCatalogEntries.forEach((entry) => {

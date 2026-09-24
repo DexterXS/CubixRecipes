@@ -734,6 +734,7 @@ Last full rebuild: 2026-06-29
 - Data files: root/server `itempanel.csv`, `itempanel.json`, `itempanel_merged.csv`, `itempanel_icons/`, `itempanel_atlas_cache/`, `oredict.txt`.
 - APIs: `/itempanel/catalog`, `/itempanel/atlas`, `/itempanel/atlas.png`, `/admin/itempanel/csv`, `/admin/itempanel/json`, `/admin/itempanel/merge`, `/admin/itempanel/merged`.
 - Important rule: real NBT comes from `nbt_raw` / `.withTag(...)`, not CSV `Has NBT=true` alone.
+- Important frontend rule: build `itemPanelEntryByRaw` before any `resolveCellTitle` memo can run; NBT draft titles use the exact raw lookup during editor transitions.
 - Important frontend rule: icon loading may rerender `pages/App.tsx`; texture-mod selection synchronization must preserve the existing state object when values are unchanged, and `ItemTooltipLayer` must avoid publishing identical positions.
 
 ### Icon Indexing and Resolver
