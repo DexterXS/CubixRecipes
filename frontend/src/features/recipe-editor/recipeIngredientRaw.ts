@@ -16,8 +16,8 @@ const MUTABLE_ENERGY_KEYS = new Set([
   'storedenergyrf'
 ]);
 
-export function normalizeRecipeIngredientRaw(raw: string): string {
-  const trimmed = raw.trim();
+export function normalizeRecipeIngredientRaw(raw: string | null | undefined): string {
+  const trimmed = raw?.trim() ?? '';
   const match = trimmed.match(ITEM_RAW_PATTERN);
   if (!match || !match[3] || !hasMutableEnergyKey(match[3])) {
     return trimmed;

@@ -24,6 +24,10 @@ The target architecture is a modular monolith: one cohesive project/runtime surf
 - NEVER modify unrelated files.
 - NEVER refactor unless explicitly requested.
 
+### Golden Recipe Script Rule
+- Never serialize live energy NBT into generated or downloaded CraftTweaker `.zs` scripts. Energy-bearing item references must be emitted without mutable energy tags and with wildcard metadata when required, for example `<IC2:itemBatCrystal:*>`.
+- Full energy NBT may remain in the NEI catalog, item previews, and the NBT editor, but every script-emission boundary must enforce this rule and have a regression test. Non-energy NBT must remain intact.
+
 ---
 
 ## Execution Modes

@@ -14,21 +14,39 @@ def test_remove_template_wildcard_preserves_canonical_item_case():
     assert rendered == 'recipes.remove(<Avaritia:Resource:*>);'
 
 
-def test_recipe_round_trip_preserves_mixed_case_ids_and_nbt():
+def test_recipe_render_strips_live_energy_nbt_from_ingredients():
     parser = RecipeParser()
     service = RecipeService(None, parser)
     source = (
-        'recipes.addShaped(<Avaritia:Resource:1>, '
+        'recipes.addShaped(<minecraft:stone>, '
         '[[<appliedenergistics2:tile.BlockAdvancedCraftingUnit>, '
-        '<cubix_ae:advanced_energy_cell>.withTag({internalMaxPower:1.28E7d,internalCurrentPower:1.28E7d})]]);'
+        '<cubix_ae:advanced_energy_cell>.withTag({internalMaxPower:1.28E7d,internalCurrentPower:1.28E7d}), '
+        '<energyadditions:energyCell>.withTag({rfenergy:500000000,euenergy:500000000})]]);'
     )
     recipe = parser.parse(source).recipe
 
     rendered = service.render_recipe(recipe)
 
-    assert '<Avaritia:Resource:1>' in rendered
+    assert '<minecraft:stone>' in rendered
     assert '<appliedenergistics2:tile.BlockAdvancedCraftingUnit>' in rendered
-    assert '<cubix_ae:advanced_energy_cell>.withTag({internalMaxPower:1.28E7d,internalCurrentPower:1.28E7d})' in rendered
+    assert '<cubix_ae:advanced_energy_cell:*>' in rendered
+    assert '<energyadditions:energyCell:*>' in rendered
+    assert '.withTag({rfenergy:500000000,euenergy:500000000})' not in rendered
+    assert '.withTag({internalMaxPower:1.28E7d,internalCurrentPower:1.28E7d})' not in rendered
+
+
+def test_recipe_render_preserves_non_energy_nbt():
+    parser = RecipeParser()
+    service = RecipeService(None, parser)
+    source = (
+        'recipes.addShaped(<minecraft:enchanted_book>, '
+        '[[<minecraft:enchanted_book>.withTag({StoredEnchantments:[{lvl:3 as short,id:35 as short}]})]]);'
+    )
+    recipe = parser.parse(source).recipe
+
+    rendered = service.render_recipe(recipe)
+
+    assert '<minecraft:enchanted_book>.withTag({StoredEnchantments:[{lvl:3 as short,id:35 as short}]})' in rendered
 
 
 def test_extreme_recipe_round_trip_preserves_mixed_case_ids():

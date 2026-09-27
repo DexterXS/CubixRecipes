@@ -4,6 +4,7 @@ from typing import Optional
 
 from app.domain.models import BindingMode, ItemRef, Recipe
 from app.parsers.recipe_parser import RecipeParser
+from app.services.recipe_item_rules import normalize_recipe_script_item
 from app.storage.zs_storage import ZsStorage
 
 
@@ -50,10 +51,15 @@ class RecipeService:
         recipe_type: Optional[str] = None,
         remove_template: Optional[str] = None,
     ) -> Recipe:
+        normalized_output = normalize_recipe_script_item(output_raw) or output_raw.strip()
+        normalized_matrix = [
+            [normalize_recipe_script_item(cell) for cell in row]
+            for row in matrix
+        ]
         next_recipe = self.parser.build_recipe_from_matrix(
             recipe_type=recipe_type or recipe.recipe_type,
-            output_raw=output_raw,
-            matrix=matrix,
+            output_raw=normalized_output,
+            matrix=normalized_matrix,
             source_kind=recipe.source.kind,
             name=name,
             recipe_uid=recipe.recipe_uid,
@@ -66,28 +72,37 @@ class RecipeService:
         return next_recipe
 
     def render_recipe(self, recipe: Recipe, remove_template: Optional[str] = None) -> str:
+        output_raw = normalize_recipe_script_item(recipe.output.raw) or recipe.output.raw
         if recipe.recipe_type == 'ct_shapeless':
-            ingredients = [cell.raw for row in recipe.matrix for cell in row if cell.raw is not None]
+            ingredients = [
+                normalize_recipe_script_item(cell.raw) or ''
+                for row in recipe.matrix
+                for cell in row
+                if cell.raw is not None
+            ]
             ingredient_list = '[' + ', '.join(ingredients) + ']'
             if recipe.name:
-                rendered_recipe = f'recipes.addShapeless("{recipe.name}", {recipe.output.raw}, {ingredient_list});'
+                rendered_recipe = f'recipes.addShapeless("{recipe.name}", {output_raw}, {ingredient_list});'
             else:
-                rendered_recipe = f'recipes.addShapeless({recipe.output.raw}, {ingredient_list});'
+                rendered_recipe = f'recipes.addShapeless({output_raw}, {ingredient_list});'
             return self._with_remove_template(recipe, rendered_recipe, remove_template)
 
         matrix = self._render_matrix(recipe)
         if recipe.recipe_type == 'avaritia_extreme_shaped':
-            rendered_recipe = f'mods.avaritia.ExtremeCrafting.addShaped({recipe.output.raw}, {matrix});'
+            rendered_recipe = f'mods.avaritia.ExtremeCrafting.addShaped({output_raw}, {matrix});'
         elif recipe.name:
-            rendered_recipe = f'recipes.addShaped("{recipe.name}", {recipe.output.raw}, {matrix});'
+            rendered_recipe = f'recipes.addShaped("{recipe.name}", {output_raw}, {matrix});'
         else:
-            rendered_recipe = f'recipes.addShaped({recipe.output.raw}, {matrix});'
+            rendered_recipe = f'recipes.addShaped({output_raw}, {matrix});'
         return self._with_remove_template(recipe, rendered_recipe, remove_template)
 
     def _render_matrix(self, recipe: Recipe) -> str:
         rows = []
         for index, row in enumerate(recipe.matrix):
-            rendered = ', '.join(cell.raw if cell.raw is not None else 'null' for cell in row)
+            rendered = ', '.join(
+                normalize_recipe_script_item(cell.raw) if cell.raw is not None else 'null'
+                for cell in row
+            )
             comma = ',' if index < len(recipe.matrix) - 1 else ''
             rows.append(f'  [{rendered}]{comma}')
         return '[\n' + '\n'.join(rows) + '\n]'
@@ -111,9 +126,14 @@ class RecipeService:
         if not normalized.startswith(ALLOWED_REMOVE_TEMPLATE_PREFIXES):
             raise ValueError('Remove template must use recipes.remove, recipes.removeShaped, or recipes.removeShapeless')
         matrix = self._render_matrix(recipe)
-        ingredients = '[' + ', '.join(cell.raw for row in recipe.matrix for cell in row if cell.raw is not None) + ']'
+        ingredients = '[' + ', '.join(
+            normalize_recipe_script_item(cell.raw) or ''
+            for row in recipe.matrix
+            for cell in row
+            if cell.raw is not None
+        ) + ']'
         rendered = normalized.format(
-            output=recipe.output.raw,
+            output=normalize_recipe_script_item(recipe.output.raw) or recipe.output.raw,
             output_wildcard=self._item_with_meta(recipe.output, '*'),
             output_meta0=self._item_with_meta(recipe.output, '0'),
             matrix=matrix,

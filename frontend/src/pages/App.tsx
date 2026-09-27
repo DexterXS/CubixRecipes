@@ -5091,14 +5091,15 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function outputRawWithMeta(meta: string): string {
-    const parsed = parseItemRaw(outputRaw);
-    return parsed ? `<${parsed.key}:${meta}>` : outputRaw.trim();
+    const scriptOutputRaw = normalizeRecipeIngredientRaw(outputRaw);
+    const parsed = parseItemRaw(scriptOutputRaw);
+    return parsed ? `<${parsed.key}:${meta}>` : scriptOutputRaw;
   }
 
   function renderSourceMatrix(): string {
     const sourceMatrix = matrixForRecipeSource(matrix, recipe.recipe_type, recipeBindingMode);
     const rows = sourceMatrix
-      .map((row, index) => `  [${row.map((cell) => cell?.trim() || 'null').join(', ')}]${index < sourceMatrix.length - 1 ? ',' : ''}`)
+      .map((row, index) => `  [${row.map((cell) => normalizeRecipeIngredientRaw(cell) || 'null').join(', ')}]${index < sourceMatrix.length - 1 ? ',' : ''}`)
       .join('\n');
     return `[\n${rows}\n]`;
   }
@@ -5107,11 +5108,11 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     const normalized = (template ?? '').trim();
     if (!normalized || normalized === 'none') return '';
     const matrixSource = renderSourceMatrix();
-    const ingredients = `[${matrix.flat().filter((cell): cell is string => Boolean(cell && cell !== 'null')).map((cell) => cell.trim()).join(', ')}]`;
+    const ingredients = `[${matrix.flat().filter((cell): cell is string => Boolean(cell && cell !== 'null')).map((cell) => normalizeRecipeIngredientRaw(cell)).join(', ')}]`;
     const rendered = normalized
       .replaceAll('{output_wildcard}', outputRawWithMeta('*'))
       .replaceAll('{output_meta0}', outputRawWithMeta('0'))
-      .replaceAll('{output}', outputRaw.trim())
+      .replaceAll('{output}', normalizeRecipeIngredientRaw(outputRaw))
       .replaceAll('{matrix}', matrixSource)
       .replaceAll('{ingredients}', ingredients);
     return rendered.endsWith(';') ? rendered : `${rendered};`;
@@ -5119,20 +5120,23 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function buildRecipeSource(): string {
     const removeLine = renderRemoveTemplate(activeRemoveTemplate());
+    const scriptOutputRaw = normalizeRecipeIngredientRaw(outputRaw);
     if (recipe.recipe_type === 'ct_shapeless') {
-      const ingredients = matrix.flat().filter((cell): cell is string => Boolean(cell && cell !== 'null'));
-      const rendered = `recipes.addShapeless(${outputRaw.trim()}, [${ingredients.join(', ')}]);`;
+      const ingredients = matrix.flat()
+        .filter((cell): cell is string => Boolean(cell && cell !== 'null'))
+        .map((cell) => normalizeRecipeIngredientRaw(cell));
+      const rendered = `recipes.addShapeless(${scriptOutputRaw}, [${ingredients.join(', ')}]);`;
       return `${removeLine ? `${removeLine}\n` : ''}${rendered}\n`;
     }
     const call = recipe.recipe_type === 'avaritia_extreme_shaped'
       ? 'mods.avaritia.ExtremeCrafting.addShaped'
       : 'recipes.addShaped';
-    const rendered = `${call}(${outputRaw.trim()}, ${renderSourceMatrix()});`;
+    const rendered = `${call}(${scriptOutputRaw}, ${renderSourceMatrix()});`;
     return `${removeLine ? `${removeLine}\n` : ''}${rendered}\n`;
   }
 
   function getValidOutputRaw(): string | null {
-    const normalized = outputRaw.trim();
+    const normalized = normalizeRecipeIngredientRaw(outputRaw);
     return normalized && parseItemRaw(normalized) ? normalized : null;
   }
 

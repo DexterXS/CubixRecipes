@@ -1560,6 +1560,35 @@ test('local save can append current recipe into uploaded site file with remove t
   });
 });
 
+test('local .zs source generation strips live energy NBT from legacy editor state', async () => {
+  const { container } = render(<App authUser={adminUser} onLogout={vi.fn()} />);
+  const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
+  const source = 'recipes.addShaped(<minecraft:torch>, [[<minecraft:planks>]]);';
+  const file = new File([source], 'local-energy.zs', { type: 'text/plain' });
+  Object.defineProperty(file, 'text', { value: vi.fn(async () => source) });
+
+  fireEvent.change(fileInput, { target: { files: [file] } });
+  expect(await screen.findByText('local-energy.zs')).toBeTruthy();
+  fireEvent.click(screen.getByLabelText('craft-board-menu'));
+  fireEvent.click(screen.getByRole('button', { name: 'Детальные настройки output' }));
+  const craftDialog = await screen.findByRole('dialog', { name: 'Craft editor' });
+  fireEvent.change(within(craftDialog).getByLabelText('craft-source-modal'), {
+    target: { value: '<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})' }
+  });
+  fireEvent.click(within(craftDialog).getByRole('button', { name: 'Применить' }));
+  openRecipeActions();
+  fireEvent.click(screen.getByLabelText('save-local'));
+
+  const dialog = await screen.findByRole('dialog', { name: 'local-save-choice' });
+  fireEvent.click(within(dialog).getByLabelText('local-save-append'));
+
+  await waitFor(() => {
+    const editor = screen.getByLabelText('local-script-editor') as HTMLTextAreaElement;
+    expect(editor.value).toContain('<examplemod:charged:*>');
+    expect(editor.value).not.toContain('.withTag({charge: 3.6E7, ea_module_admin: 1})');
+  });
+});
+
 test('admin can enable whitelist mode', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 

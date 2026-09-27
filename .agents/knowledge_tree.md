@@ -111,6 +111,8 @@ Last full rebuild: 2026-06-29
   - Use-case layer for parse/create/update/render operations.
   - Class: `RecipeService`.
   - Depends on `RecipeParser`, `ZsStorage`, and domain models.
+- `backend/app/services/recipe_item_rules.py`
+  - Shared backend boundary rule for CraftTweaker script output: strips mutable energy NBT and emits wildcard item metadata while preserving unrelated NBT.
 - `backend/app/storage/zs_storage.py`
   - Scans `.zs` files, indexes recipes, searches by output/ingredient, saves existing recipes, appends save-as recipes, creates/reads/deletes/renames managed `.zs` files, prevents unsafe writes, rescans changed files.
   - Classes: `StoredRecipe`, `ZsStorage`.
@@ -427,6 +429,7 @@ Last full rebuild: 2026-06-29
   - Normalizes live energy-bearing item NBT to wildcard CraftTweaker item references only when an NEI item is inserted into a recipe; non-energy NBT remains intact.
 - `frontend/src/features/recipe-editor/recipeIngredientRaw.test.ts`
   - Covers energy field variants, wildcard metadata normalization, and preservation of unrelated NBT.
+- `frontend/src/features/recipe-editor/recipeIngredientRaw.ts` is also used by the local `.zs` source renderer, so downloaded and appended scripts receive the same energy-NBT normalization as NEI insertion.
 
 ### Icon Lab Feature
 - `frontend/src/features/icon-lab/IconScaleLab.tsx`
@@ -742,6 +745,7 @@ Last full rebuild: 2026-06-29
 - Frontend files: `pages/App.tsx`, `features/recipe-editor/recipeMatrix.ts`, `components/RecipeGrid.tsx`, `components/NbtTreeEditor.tsx`, `services/api/*`, `types/index.ts`.
 - APIs: `/parse`, `/recipes/create`, `/recipes/search`, `/recipes/uses`, `/recipes/search-batch`, `/recipes/{recipe_uid}`, `/recipes/save-as`, `/zs/files`, `/zs/files/create`.
 - Tests: `test_parser.py`, `test_storage.py`, `test_api_routes.py`, `App.test.tsx`, `recipeMatrix.test.ts`.
+- Script safety tests: `backend/app/tests/test_recipe_service.py` and `frontend/src/features/recipe-editor/recipeIngredientRaw.test.ts`.
 
 ### Itempanel, NEI, NBT Catalog
 - Backend files: `items/item_catalog.py`, `items/itempanel_merge.py`, `indexer/itempanel_icon_catalog.py`, `indexer/itempanel_atlas_builder.py`, `indexer/itempanel_atlas_cache.py`, `services/server_manager.py`, `api/routes.py`.
@@ -751,6 +755,7 @@ Last full rebuild: 2026-06-29
 - Important rule: real NBT comes from `nbt_raw` / `.withTag(...)`, not CSV `Has NBT=true` alone.
 - Important frontend rule: build `itemPanelEntryByRaw` before any `resolveCellTitle` memo can run; NBT draft titles use the exact raw lookup during editor transitions.
 - Important frontend rule: full itempanel NBT remains available for NEI display and the NBT editor, while recipe insertion strips mutable energy fields and uses wildcard metadata (for example `<IC2:itemBatCrystal:*>`).
+- Important script rule: both the frontend source renderer and backend `RecipeService` must strip live energy NBT before any `.zs` output is downloaded or persisted; non-energy NBT remains unchanged.
 - Important frontend rule: icon loading may rerender `pages/App.tsx`; texture-mod selection synchronization must preserve the existing state object when values are unchanged, and `ItemTooltipLayer` must avoid publishing identical positions.
 
 ### Icon Indexing and Resolver
