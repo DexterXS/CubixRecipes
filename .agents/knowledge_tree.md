@@ -423,6 +423,10 @@ Last full rebuild: 2026-06-29
   - Extracted from `pages/App.tsx` so recipe-editor domain logic is no longer owned by the page shell.
 - `frontend/src/features/recipe-editor/recipeMatrix.test.ts`
   - Covers matrix edge trimming, strict/shapeless position preservation, supported grid sizing, and recipe type mapping.
+- `frontend/src/features/recipe-editor/recipeIngredientRaw.ts`
+  - Normalizes live energy-bearing item NBT to wildcard CraftTweaker item references only when an NEI item is inserted into a recipe; non-energy NBT remains intact.
+- `frontend/src/features/recipe-editor/recipeIngredientRaw.test.ts`
+  - Covers energy field variants, wildcard metadata normalization, and preservation of unrelated NBT.
 
 ### Icon Lab Feature
 - `frontend/src/features/icon-lab/IconScaleLab.tsx`
@@ -746,6 +750,7 @@ Last full rebuild: 2026-06-29
 - APIs: `/itempanel/catalog`, `/itempanel/atlas`, `/itempanel/atlas.png`, `/admin/itempanel/csv`, `/admin/itempanel/json`, `/admin/itempanel/merge`, `/admin/itempanel/merged`.
 - Important rule: real NBT comes from `nbt_raw` / `.withTag(...)`, not CSV `Has NBT=true` alone.
 - Important frontend rule: build `itemPanelEntryByRaw` before any `resolveCellTitle` memo can run; NBT draft titles use the exact raw lookup during editor transitions.
+- Important frontend rule: full itempanel NBT remains available for NEI display and the NBT editor, while recipe insertion strips mutable energy fields and uses wildcard metadata (for example `<IC2:itemBatCrystal:*>`).
 - Important frontend rule: icon loading may rerender `pages/App.tsx`; texture-mod selection synchronization must preserve the existing state object when values are unchanged, and `ItemTooltipLayer` must avoid publishing identical positions.
 
 ### Icon Indexing and Resolver

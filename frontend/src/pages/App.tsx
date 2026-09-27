@@ -11,6 +11,7 @@ import { NbtTreeEditor, nbtScalarTypes, type NbtCompoundNode, type NbtNode, type
 import { MobileAppMenu } from '../features/mobile-shell/MobileAppMenu';
 import { NeiFavoritesPanel } from '../features/nei-favorites/NeiFavoritesPanel';
 import { NeiIconItem } from '../features/nei/NeiIconItem';
+import { normalizeRecipeIngredientRaw } from '../features/recipe-editor/recipeIngredientRaw';
 import { AuctionBuilder } from '../features/auctions/AuctionBuilder';
 import type { AuctionItemOption } from '../features/auctions/auctionTypes';
 import { AppSettingsModal } from '../features/settings/AppSettingsModal';
@@ -4492,7 +4493,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function handleRecipeItemDrop(target: CraftEditorTarget, raw: string) {
-    const normalized = raw.trim();
+    const normalized = normalizeRecipeIngredientRaw(raw);
     if (!normalized) return;
     setCellRaw(target, normalized);
   }
@@ -4516,7 +4517,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   function handleCraftCellClick(row: number, col: number) {
     const currentRaw = matrix[row]?.[col] ?? null;
     if (heldItemRaw) {
-      setMatrixCell(row, col, heldItemRaw);
+      setCellRaw({ kind: 'cell', row, col }, heldItemRaw);
       return;
     }
     if (currentRaw) {
@@ -4542,7 +4543,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   }
 
   function handleNeiItemPick(raw: string) {
-    const nextRaw = applyItemCaseAlias(raw);
+    const nextRaw = normalizeRecipeIngredientRaw(applyItemCaseAlias(raw));
     setTouchItemInspection(null);
     setHeldItemRaw((current) => (current === nextRaw ? null : nextRaw));
   }
@@ -6256,13 +6257,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
 
   function renderNeiFavoriteItem(raw: string) {
     const title = resolveCellTitle(raw) || raw;
+    const recipeRaw = normalizeRecipeIngredientRaw(raw);
     const availability = getRecipeAvailability(raw);
     return (
       <NeiIconItem
         key={raw}
         raw={raw}
         ariaLabelPrefix="favorite-item"
-        className={`nei-item favorite-item recipe-${availability} ${rawHasNbtTag(raw) ? 'has-nbt' : 'no-nbt'} ${heldItemRaw === raw ? 'is-held' : ''}`.trim()}
+        className={`nei-item favorite-item recipe-${availability} ${rawHasNbtTag(raw) ? 'has-nbt' : 'no-nbt'} ${heldItemRaw === recipeRaw ? 'is-held' : ''}`.trim()}
         icon={(
           <span className="nei-icon favorite-icon" aria-hidden="true">
             {renderCraftItemIcon(raw, getCachedItemIconUrl(raw), false, undefined, title)}
@@ -6280,12 +6282,14 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
         onOpenActions={openNeiItemActions}
         onInspect={(nextRaw, x, y) => inspectNeiItem(nextRaw, x, y)}
         onDragStart={(event, nextRaw) => {
-          event.dataTransfer.setData('text/plain', nextRaw);
+          const normalized = normalizeRecipeIngredientRaw(nextRaw);
+          event.dataTransfer.setData('text/plain', normalized);
           event.dataTransfer.effectAllowed = 'copy';
-          setHeldItemRaw(nextRaw);
+          setHeldItemRaw(normalized);
         }}
         onDragEnd={(nextRaw) => {
-          setHeldItemRaw((current) => (current === nextRaw ? null : current));
+          const normalized = normalizeRecipeIngredientRaw(nextRaw);
+          setHeldItemRaw((current) => (current === normalized ? null : current));
         }}
       />
     );
@@ -6339,7 +6343,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
             >
             {neiItems.map((entry) => {
               const raw = itemPanelRaw(entry);
-              let insertRaw = applyItemCaseAlias(raw);
+              let insertRaw = normalizeRecipeIngredientRaw(applyItemCaseAlias(raw));
               const overrideGroup = oreDictOverrides[raw];
               if (overrideGroup) {
                 insertRaw = `<${overrideGroup}>`;

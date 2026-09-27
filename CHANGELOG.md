@@ -6,6 +6,7 @@
 - Fixed the React `#185` NEI crash by preventing equivalent icon-mod selection and tooltip-position state updates from starting a render loop while item icons load.
 - Fixed the NEI held-item cursor drifting to the bottom of the workspace after icon-placement CSS changes by keeping its viewport-fixed positioning intact.
 - Fixed the production NEI repeat-click crash (`Cannot access 'Vd' before initialization`) by keeping the Atlas registry readiness calculation inside its memoized lookup builder.
+- Fixed energy-bearing recipe ingredients by converting live charge/energy NBT to wildcard CraftTweaker item references during recipe insertion, while preserving full NBT for NEI display and the NBT editor.
 
 ### Added
 - Ускорил переключение вкладок избранного NEI: выбранная вкладка меняется локально без немедленной перерисовки всего редактора, а сохранение профиля остаётся отложенным.

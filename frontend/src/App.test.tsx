@@ -1020,6 +1020,23 @@ test('craft grid renders generated mod icon atlas entries after placing an NEI i
   });
 });
 
+test('energy items lose live energy NBT when placed into the craft grid', async () => {
+  render(<App authUser={adminUser} onLogout={vi.fn()} />);
+
+  fireEvent.change(await screen.findByLabelText('nei-search'), { target: { value: 'charged' } });
+  const item = await screen.findByLabelText('nei-item-<examplemod:charged:1>.withTag({charge: 3.6E7, ea_module_admin: 1})');
+
+  fireEvent.click(item);
+  await waitFor(() => expect(document.querySelector('.held-item-cursor')).toBeTruthy());
+  fireEvent.click(screen.getByLabelText('craft-cell-0-0'));
+
+  await waitFor(() => {
+    const cell = document.querySelector('[data-row="0"][data-col="0"]') as HTMLElement | null;
+    expect(cell?.dataset.itemRaw).toBe('<examplemod:charged:*>');
+    expect(cell?.dataset.itemRaw).not.toContain('.withTag(');
+  });
+});
+
 test('technical panel shows item case aliases and saves manual values', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
