@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
+- Restored the `dataclasses.field` import required by active recipe domain models after unused-model cleanup; backend startup now completes again.
 - Removed unused auction workspace components, dead backend DTOs/helpers, stale workspace-layout fields, and the unused `authlib` dependency; preserved runtime data, user-authored scripts, and deployment artifacts for explicit review.
 - Fixed editing NBT recipe drafts from the Drafts workspace by initializing the item-panel raw lookup before title and recipe-grid resolution runs.
 - Fixed the React `#185` NEI crash by preventing equivalent icon-mod selection and tooltip-position state updates from starting a render loop while item icons load.
