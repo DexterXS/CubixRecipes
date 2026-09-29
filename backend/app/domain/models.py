@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Optional
 
@@ -82,13 +82,3 @@ class ResolutionResult:
     confidence: float
     strategy: str
     trace: list[dict[str, Any]]
-
-
-@dataclass
-class AssetCandidate:
-    asset_id: str
-    source_type: str
-    path: str
-    animated: bool = False
-    display_name: Optional[str] = None
-    payload: dict[str, Any] = field(default_factory=dict)

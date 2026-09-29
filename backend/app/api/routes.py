@@ -154,22 +154,6 @@ def _project_root_for_catalog(config_service: ProjectConfigService) -> Path:
     return Path(__file__).resolve().parents[3]
 
 
-def _itempanel_snbt_path_for_catalog(project_root: Path, active_scripts_dir: str) -> Path:
-    scripts_path = Path(active_scripts_dir).expanduser().resolve(strict=False)
-    scripts_dump = scripts_path.parent / 'dumps' / 'itempanel.json'
-    candidates = [
-        scripts_dump,
-        project_root / 'dumps' / 'itempanel.json',
-        project_root / 'itempanel.json',
-    ]
-    for candidate in candidates:
-        if candidate.is_file():
-            return candidate
-    if active_scripts_dir != 'scripts':
-        return scripts_dump
-    return project_root / 'itempanel.json'
-
-
 def _has_itempanel_icon_catalog(catalog: ItemPanelIconCatalog) -> bool:
     return bool(catalog.last_scan_report.get('matched', 0))
 

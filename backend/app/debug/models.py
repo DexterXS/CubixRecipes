@@ -42,33 +42,6 @@ class RecipeBlockDiagnostic:
 
 
 @dataclass
-class RecipeFileDiagnostic:
-    path: str
-    exists: bool
-    discovered: bool
-    scanned: bool
-    read_ok: bool
-    source: str
-    recipe_count: int = 0
-    recognized_types: list[str] = field(default_factory=list)
-    blocks: list[RecipeBlockDiagnostic] = field(default_factory=list)
-    unparsed_fragments: list[dict[str, Any]] = field(default_factory=list)
-    errors: list[DebugIssue] = field(default_factory=list)
-
-
-@dataclass
-class AssetSourceDiagnostic:
-    source_path: str
-    source_kind: str
-    exists: bool
-    scanned: bool
-    indexed_files: int = 0
-    skipped_files: list[dict[str, Any]] = field(default_factory=list)
-    errors: list[DebugIssue] = field(default_factory=list)
-    registered_keys: list[str] = field(default_factory=list)
-
-
-@dataclass
 class ResolverDiagnostic:
     item_raw: str
     raw_id: str

@@ -75,7 +75,7 @@ Last full rebuild: 2026-06-29
 ### Domain
 - `backend/app/domain/models.py`
   - Shared backend domain objects.
-  - Classes/enums: `MetaMode`, `BindingMode`, `ItemRef`, `RecipeCell`, `RecipeSource`, `Recipe`, `ResolutionResult`, `AssetCandidate`.
+  - Classes/enums: `MetaMode`, `BindingMode`, `ItemRef`, `RecipeCell`, `RecipeSource`, `Recipe`, `ResolutionResult`.
   - `ItemRef.modid/name/base_key` remain lowercase normalized lookup data; `canonical_modid/canonical_name/canonical_key` preserve source registry spelling for serialization.
   - Used by parser, storage, resolver, item catalog, debug, and recipe service.
 
@@ -129,7 +129,7 @@ Last full rebuild: 2026-06-29
   - Classes/functions: `ItemPanelMergeReport`, `read_csv_rows`, `read_snbt_lines`, `extract_top_level_id`, `extract_top_level_damage`, `has_nbt_tag`, `extract_tag_snbt`, `merge_itempanel_csv_with_snbt`.
 - `backend/app/items/oredict_parser.py`
   - Parses `oredict.txt` into group and reverse indexes.
-  - Functions: `parse_oredict_groups`, `parse_oredict_reverse`, `build_oredict_indexes`.
+  - Functions: `build_oredict_indexes`.
 - `backend/app/items/custom_items.py`
   - File-backed custom item store.
   - Class: `CustomItemService`.
@@ -194,7 +194,7 @@ Last full rebuild: 2026-06-29
 
 ### Debugging
 - `backend/app/debug/models.py`
-  - Debug DTOs: `DebugIssue`, `DebugPathEntry`, `RecipeBlockDiagnostic`, `RecipeFileDiagnostic`, `AssetSourceDiagnostic`, `ResolverDiagnostic`, `ParseDiagnostic`, `DebugSnapshot`.
+  - Debug DTOs: `DebugIssue`, `DebugPathEntry`, `RecipeBlockDiagnostic`, `ResolverDiagnostic`, `ParseDiagnostic`, `DebugSnapshot`.
 - `backend/app/debug/debug_service.py`
   - Builds debug snapshots across config, recipes, assets, parser, and resolver.
   - Class: `DebugService`.
@@ -546,10 +546,6 @@ Last full rebuild: 2026-06-29
   - Owns the selected-day price-mode panel and lightweight manual price preview without loading the graph.
 - `frontend/src/features/auctions/AuctionServerIdPanel.tsx`
   - Owns selected-day server-ID lifecycle messaging and missing-ID summary.
-- `frontend/src/features/auctions/AuctionPlanPanel.tsx`
-  - Legacy auction plan sidebar retained for compatibility/reference but no longer used by the main day-folder workspace.
-- `frontend/src/features/auctions/AuctionItemsWorkspace.tsx`
-  - Legacy auction item workspace retained for compatibility/reference but no longer used by the main three-level Auctions workspace.
 - `frontend/src/features/auctions/AuctionHelpTip.tsx`
   - Owns local hover/focus help popovers for auction-only fields and panels, including examples for local labels, server IDs, graph percentages, item prices, and staged command downloads.
 - `frontend/src/features/auctions/auctionCommands.ts`

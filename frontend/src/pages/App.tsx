@@ -61,10 +61,6 @@ const defaultMatrix: CellValue[][] = [
 const defaultWorkspaceLayout: WorkspaceLayout = {
   columns: 3,
   compact_header: true,
-  top_split_ratio: 0.68,
-  main_sidebar_ratio: 0.76,
-  top_height: 560,
-  bottom_height: 260,
   extreme_grid_gap: 8
 };
 
@@ -1334,10 +1330,6 @@ function normalizeWorkspaceLayout(raw?: WorkspaceLayout | null): WorkspaceLayout
   return {
     columns: clamp(Number(raw?.columns ?? 3), 1, 3) as 1 | 2 | 3,
     compact_header: Boolean(raw?.compact_header ?? true),
-    top_split_ratio: defaultWorkspaceLayout.top_split_ratio,
-    main_sidebar_ratio: defaultWorkspaceLayout.main_sidebar_ratio,
-    top_height: defaultWorkspaceLayout.top_height,
-    bottom_height: defaultWorkspaceLayout.bottom_height,
     extreme_grid_gap: clamp(Number(raw?.extreme_grid_gap ?? defaultWorkspaceLayout.extreme_grid_gap ?? 8), 0, 24)
   };
 }

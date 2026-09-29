@@ -59,7 +59,7 @@ function projectSettings() {
       language: 'ru',
       active_view_tab: 'editor',
       reset_layout_version: 4,
-      workspace_layout: { columns: 3, compact_header: true, top_split_ratio: 0.68, main_sidebar_ratio: 0.76, top_height: 560, bottom_height: 260, extreme_grid_gap: 8 },
+      workspace_layout: { columns: 3, compact_header: true, extreme_grid_gap: 8 },
       panel_layout: []
     }
   };

@@ -8,20 +8,6 @@ from pathlib import Path
 # Public API
 # ---------------------------------------------------------------------------
 
-def parse_oredict_groups(path: Path) -> dict[str, list[str]]:
-    """Return forward index: {ore_group_name: [item_raw, ...]}."""
-    return _parse(path)[0]
-
-
-def parse_oredict_reverse(path: Path) -> dict[str, list[str]]:
-    """Return reverse index: {normalised_item_key: [ore_group_name, ...]}.
-
-    Key is lowercase ``modid:itemname`` **without** meta so that wildcard
-    entries still match all meta variants.
-    """
-    return _parse(path)[1]
-
-
 def build_oredict_indexes(
     path: Path,
 ) -> tuple[dict[str, list[str]], dict[str, list[str]]]:
