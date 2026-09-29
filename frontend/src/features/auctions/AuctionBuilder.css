@@ -127,7 +127,6 @@
   grid-template-columns: minmax(178px, 198px) minmax(520px, 1fr) minmax(360px, 420px);
 }
 
-.auction-layout > .auction-day-details-panel,
 .auction-layout > .auction-lot-quick-panel {
   position: sticky;
   top: 16px;
@@ -350,7 +349,6 @@
     grid-template-columns: 1fr;
   }
 
-  .auction-layout > .auction-day-details-panel,
   .auction-layout > .auction-lot-quick-panel {
     position: static;
     max-height: none;
