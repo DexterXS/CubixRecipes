@@ -127,11 +127,16 @@
   grid-template-columns: minmax(178px, 198px) minmax(520px, 1fr) minmax(360px, 420px);
 }
 
-.auction-layout > .auction-lot-quick-panel {
+.auction-layout > .auction-lot-quick-panel-sticky {
   position: sticky;
   top: 16px;
   align-self: start;
+  min-width: 0;
   max-height: calc(100vh - 32px);
+}
+
+.auction-lot-quick-panel-sticky > .auction-lot-quick-panel {
+  max-height: inherit;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -349,8 +354,12 @@
     grid-template-columns: 1fr;
   }
 
-  .auction-layout > .auction-lot-quick-panel {
+  .auction-layout > .auction-lot-quick-panel-sticky {
     position: static;
+    max-height: none;
+  }
+
+  .auction-lot-quick-panel-sticky > .auction-lot-quick-panel {
     max-height: none;
     overflow: visible;
   }

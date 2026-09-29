@@ -221,15 +221,17 @@ export function AuctionWorkspaceView({
       )}
 
       {workspaceView === 'folder' ? (
-        <AuctionLotQuickPanel
-          auction={selectedAuction}
-          renderItemIcon={renderItemIcon}
-          onOpenLot={onOpenAuctionLot}
-          onUpdateAuction={onUpdateAuction}
-          onUpdateServerId={onUpdateServerId}
-          onOpenCommands={onOpenCommands}
-          onApply={onApplyLotSettings}
-        />
+        <div className="auction-lot-quick-panel-sticky">
+          <AuctionLotQuickPanel
+            auction={selectedAuction}
+            renderItemIcon={renderItemIcon}
+            onOpenLot={onOpenAuctionLot}
+            onUpdateAuction={onUpdateAuction}
+            onUpdateServerId={onUpdateServerId}
+            onOpenCommands={onOpenCommands}
+            onApply={onApplyLotSettings}
+          />
+        </div>
       ) : (
         <AuctionDayDetailsPanel
           folder={selectedFolder}
