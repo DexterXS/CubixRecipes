@@ -8,6 +8,7 @@ CubixRecipes — локальное русскоязычное веб-прило
 - Clipboard/parser now also normalizes literal escaped whitespace sequences like `\n` and `\t`, so recipes pasted from chats/forums parse correctly.
 - The technical panel includes a step-by-step wipe update window for itempanel CSV, post-line `itempanel.json` SNBT data, mod icon ZIPs, atlas generation, an explicit merge action, and merged CSV inspection.
 - NEI now prefers a backend combined item catalog built from `itempanel.csv`, `itempanel.json` SNBT tags, and icon availability; NBT variants are exposed as `.withTag(...)` item entries and open as populated NBT trees in item editors.
+- Экспериментальная вкладка «Крафты — быстрый режим» использует тот же редактор с компактной постраничной NEI-панелью и общей SQLite-базой изображений для серверов.
 - Входное поле теперь автоматически парсит вставленный или вручную введённый `addShaped(...)` текст, а отдельная кнопка `Парсить` запускает тот же сценарий вручную.
 - При редактировании и сохранении обычных shaped-рецептов backend автоматически обрезает пустую рамку, пересчитывает размер сетки и сохраняет только реально используемые клетки; extreme-рецепты стабильно остаются 9×9.
 - Если backend недоступен, поле ввода показывает явное inline-сообщение с двумя адресами: локальный `/api` frontend и текущий `VITE_BACKEND_TARGET` для dev proxy, чтобы не путались frontend-port и backend-port.

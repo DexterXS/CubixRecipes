@@ -1,4 +1,4 @@
-import { type CSSProperties, type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { type CSSProperties, type DragEvent, type MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { AppWorkspaceNav } from '../app/AppWorkspaceNav';
 import { ServerContextChip } from '../app/ServerContextChip';
 import { buildWorkspaceNavigation, type WorkspaceTab } from '../app/workspaceNavigation';
@@ -23,6 +23,7 @@ import { defaultIconSurfaceSettings, defaultMobileIconSurfaceSettings, normalize
 import { useIconSurfaceCssVars } from '../features/icon-settings/useIconViewport';
 import { ItemTextureToolsPanel, type ItemPanelModSummary } from '../features/item-catalog/ItemTextureToolsPanel';
 import { DraftsWorkspace, DraftsWorkspaceStateProvider, type DraftCloudSelection } from '../features/drafts/DraftsWorkspace';
+import { FastItemPanel } from '../features/fast-crafts/FastItemPanel';
 import { ModReplacementPanel } from '../features/diagnostics/ModReplacementPanel';
 import { RecipeTasksBoard, type RecipeTaskItemOption, type RecipeTaskPrefillItem } from '../features/tasks/RecipeTasksBoard';
 import { applyTaskTextTemplate, loadTaskDefaultTemplate, taskTemplateDateInputValue, taskTemplateEmails } from '../features/tasks/taskDefaults';
@@ -872,17 +873,19 @@ function normalizeLocalDraftState(value: unknown): LocalDraftState | null {
     return null;
   }
 
-  const workspaceTab: WorkspaceTab = value.workspaceTab === 'recipe'
-    ? 'recipe'
-    : value.workspaceTab === 'tasks'
-      ? 'tasks'
-      : value.workspaceTab === 'cloud'
-        ? 'cloud'
-        : value.workspaceTab === 'auctions'
-          ? 'auctions'
-          : value.workspaceTab === 'technical' || value.workspaceTab === 'modIcons' || value.workspaceTab === 'debug'
-            ? 'technical'
-            : 'editor';
+  const workspaceTab: WorkspaceTab = value.workspaceTab === 'fastEditor'
+    ? 'fastEditor'
+    : value.workspaceTab === 'recipe'
+      ? 'recipe'
+      : value.workspaceTab === 'tasks'
+        ? 'tasks'
+        : value.workspaceTab === 'cloud'
+          ? 'cloud'
+          : value.workspaceTab === 'auctions'
+            ? 'auctions'
+            : value.workspaceTab === 'technical' || value.workspaceTab === 'modIcons' || value.workspaceTab === 'debug'
+              ? 'technical'
+              : 'editor';
   const craftEditorTarget = isCraftEditorTarget(value.craftEditorTarget) ? value.craftEditorTarget : { kind: 'output' };
   const modalScales = isObjectRecord(value.modalScales) ? value.modalScales : {};
   const uploadedDrafts = normalizeUploadedDrafts(value.uploadedDrafts);
@@ -1684,6 +1687,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
   const iconRequestRef = useRef<Set<string>>(new Set());
   const itemSearchIconCacheKeyRef = useRef(itemSearchIconCacheKey);
   const neiListRef = useRef<HTMLDivElement | null>(null);
+  const fastPanelDragRawRef = useRef<string | null>(null);
   const cursorPointRef = useRef({ x: 0, y: 0 });
   const heldCursorRef = useRef<HTMLDivElement | null>(null);
   const cursorFrameRef = useRef<number | null>(null);
@@ -2384,6 +2388,10 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     if (workspaceTab !== 'editor') {
       setIntegratedDraftsSuppressed(false);
     }
+  }, [workspaceTab]);
+
+  useEffect(() => {
+    if (workspaceTab !== 'fastEditor') fastPanelDragRawRef.current = null;
   }, [workspaceTab]);
 
   useEffect(() => {
@@ -6413,6 +6421,44 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
     );
   }
 
+  function readFastPanelItemRaw(event: DragEvent<HTMLElement>): string | null {
+    const target = event.target instanceof Element
+      ? event.target.closest<HTMLElement>('.fast-item-panel__item')
+      : null;
+    const raw = target?.dataset.itemRaw || event.dataTransfer.getData('text/plain');
+    const normalized = raw ? normalizeRecipeIngredientRaw(raw) : '';
+    return normalized || null;
+  }
+
+  function handleFastPanelDragStart(event: DragEvent<HTMLDivElement>) {
+    const raw = readFastPanelItemRaw(event);
+    fastPanelDragRawRef.current = raw;
+    if (raw) setHeldItemRaw(raw);
+  }
+
+  function handleFastPanelDragEnd(event: DragEvent<HTMLDivElement>) {
+    const raw = fastPanelDragRawRef.current ?? readFastPanelItemRaw(event);
+    fastPanelDragRawRef.current = null;
+    if (!raw) return;
+    setHeldItemRaw((current) => (current === raw ? null : current));
+  }
+
+  function renderFastItemPanel() {
+    return (
+      <div
+        className="workspace-panel-shell panel-nei panel-fast-item-panel"
+        onDragStart={handleFastPanelDragStart}
+        onDragEnd={handleFastPanelDragEnd}
+      >
+        <FastItemPanel
+          serverId={activeServerId}
+          onPick={handleNeiItemPick}
+          onHover={updateHoveredItemRaw}
+        />
+      </div>
+    );
+  }
+
   function renderTouchItemInspection() {
     if (!touchItemInspection) return null;
     const raw = touchItemInspection.raw;
@@ -8081,6 +8127,23 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
       onExportDrafts: handleDraftBatchExport,
       onItemHover: updateHoveredItemRaw
     };
+    if (workspaceTab === 'fastEditor') {
+      const fastCraftsWorkspace = (
+        <CraftsWorkspace
+          favoritesPanel={canUseNeiFavorites ? renderNeiFavoritesPanel() : null}
+          recipeBuilder={renderRecipeBuilderPanel()}
+          recipeFiles={renderRecipeFilesPanel()}
+          neiPanel={renderFastItemPanel()}
+          draftItemsPanel={integratedDraftsEnabled ? <DraftsWorkspace {...integratedDraftProps} region="items" /> : null}
+          draftTemplatesPanel={integratedDraftsEnabled ? <DraftsWorkspace {...integratedDraftProps} region="recipes" /> : null}
+        />
+      );
+      return integratedDraftsEnabled ? (
+        <DraftsWorkspaceStateProvider email={authUser.email} selectedDraftItemRaw={selectedDraftItemRaw} selectedDraftTemplates={selectedDraftTemplates}>
+          {fastCraftsWorkspace}
+        </DraftsWorkspaceStateProvider>
+      ) : fastCraftsWorkspace;
+    }
     const craftsWorkspace = (
       <CraftsWorkspace
         favoritesPanel={canUseNeiFavorites ? renderNeiFavoritesPanel() : null}
@@ -8294,7 +8357,7 @@ export default function App({ authUser = fallbackAuthUser, onLogout = async () =
           onLanguageChange={(language) => patchUiPreferences({ language })}
           onOpenSettings={() => setIsLayoutSettingsOpen(true)}
           onLogout={onLogout}
-          editorTools={workspaceTab === 'editor' ? renderRecipeFilesPanel() : undefined}
+          editorTools={workspaceTab === 'editor' || workspaceTab === 'fastEditor' ? renderRecipeFilesPanel() : undefined}
         />
         <div className="brand-with-server">
           <strong>CubixRecipes</strong>

@@ -23,6 +23,7 @@ from app.services.item_case_alias_service import ItemCaseAliasService
 from app.storage.zs_cloud import ZsCloudBackupService
 from app.services.mod_icon_atlas_service import ModIconAtlasService
 from app.services.mod_icon_atlas_build_job import ModIconAtlasBuildJob
+from app.services.shared_image_store import SharedImageStore
 from app.atlas.revision_service import AtlasRevisionService
 
 
@@ -36,12 +37,14 @@ class ServerContext:
         project_root: Path,
         parser: Any,
         log_service: Any,
+        shared_image_store: SharedImageStore,
     ) -> None:
         self.server_id = server_id
         self.name = name
         self.parser = parser
         self.log_service = log_service
         self.project_root = project_root
+        self.shared_image_store = shared_image_store
 
         self.admin_data_dir = global_admin_data_dir / "servers" / server_id
         self.admin_data_dir.mkdir(parents=True, exist_ok=True)
@@ -171,6 +174,7 @@ class ServerManager:
 
         self.servers_file = global_admin_data_dir / "servers.json"
         self.contexts: dict[str, ServerContext] = {}
+        self.shared_image_store = SharedImageStore(global_admin_data_dir / 'shared_images.db')
 
         # Инициализируем / загружаем список серверов
         self.servers = self._load_servers()
@@ -256,6 +260,7 @@ class ServerManager:
                 project_root=self.project_root,
                 parser=self.parser,
                 log_service=self.log_service,
+                shared_image_store=self.shared_image_store,
             )
         return self.contexts[server_id]
 

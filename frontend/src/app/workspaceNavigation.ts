@@ -1,6 +1,6 @@
 import type { UiLanguage } from '../types';
 
-export type WorkspaceTab = 'editor' | 'cubixcraft' | 'itemdb' | 'recipe' | 'auctions' | 'tasks' | 'technical' | 'cloud';
+export type WorkspaceTab = 'editor' | 'fastEditor' | 'cubixcraft' | 'itemdb' | 'recipe' | 'auctions' | 'tasks' | 'technical' | 'cloud';
 
 export type WorkspaceNavigationPermissions = {
   canCreateTemplates: boolean;
@@ -24,6 +24,7 @@ type WorkspaceNavigationCandidate = WorkspaceNavigationItem & {
 const labels = {
   ru: {
     recipes: 'Крафты',
+    fastEditor: 'Крафты — быстрый режим',
     cubixcraft: 'CubixCraft',
     itemdb: 'База предметов',
     drafts: 'Черновики',
@@ -32,6 +33,7 @@ const labels = {
     technical: 'Техраздел',
     cloud: 'Файлы',
     recipesDescription: 'Редактор и NEI',
+    fastEditorDescription: 'Общая база изображений',
     cubixcraftDescription: 'Крафт 9×9 с количеством',
     itemdbDescription: 'Паспорта и прогресс индексации',
     draftsDescription: 'Шаблоны и заготовки',
@@ -42,6 +44,7 @@ const labels = {
   },
   en: {
     recipes: 'Recipes',
+    fastEditor: 'Recipes — fast mode',
     cubixcraft: 'CubixCraft',
     itemdb: 'Item Database',
     drafts: 'Drafts',
@@ -50,6 +53,7 @@ const labels = {
     technical: 'Tech',
     cloud: 'Files',
     recipesDescription: 'Editor and NEI',
+    fastEditorDescription: 'Shared image database',
     cubixcraftDescription: '9×9 crafting with amounts',
     itemdbDescription: 'Item passports and indexing progress',
     draftsDescription: 'Templates and drafts',
@@ -71,6 +75,13 @@ export function buildWorkspaceNavigation(
       label: text.recipes,
       area: 'recipes',
       description: text.recipesDescription,
+      visible: true
+    },
+    {
+      id: 'fastEditor',
+      label: text.fastEditor,
+      area: 'recipes',
+      description: text.fastEditorDescription,
       visible: true
     },
     {

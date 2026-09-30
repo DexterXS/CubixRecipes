@@ -60,6 +60,7 @@ from app.domain.models import Recipe
 from app.indexer.asset_index import AssetIndex
 from app.indexer.itempanel_icon_catalog import ItemPanelIconCatalog
 from app.items.item_catalog import ItemCatalogService
+from app.items.item_catalog import build_item_raw
 from app.items.oredict_parser import build_oredict_indexes
 from app.items.custom_items import CustomItemService
 from app.parsers.recipe_parser import RecipeParser
@@ -1327,6 +1328,63 @@ def create_app(scripts_dir: str = 'scripts', config_path: Optional[str] = None) 
     @router.get('/itempanel/catalog/version')
     def itempanel_catalog_version():
         return {'fingerprint': item_catalog_service.current_fingerprint()}
+
+    @router.get('/fast-itempanel/page')
+    def fast_itempanel_page(
+        page: int = 1,
+        limit: int = 48,
+        q: str = '',
+    ):
+        if page < 1:
+            raise HTTPException(status_code=422, detail='page must be at least 1')
+        if limit < 1 or limit > 96:
+            raise HTTPException(status_code=422, detail='limit must be between 1 and 96')
+
+        context = _current_context()
+        entries = sorted(
+            context.itempanel_icon_catalog.entries_by_key.values(),
+            key=lambda entry: (
+                entry.item_key.casefold(),
+                -1 if entry.meta is None else entry.meta,
+                entry.display_name.casefold(),
+                entry.icon_file.casefold(),
+            ),
+        )
+        all_filenames = [entry.icon_file for entry in entries]
+        query = q.strip().casefold()
+        if query:
+            entries = [
+                entry for entry in entries
+                if query in entry.item_key.casefold() or query in entry.display_name.casefold()
+            ]
+
+        filenames = [entry.icon_file for entry in entries]
+        context.shared_image_store.sync_server_icons(
+            context.server_id,
+            context.active_itempanel_icons_dir(),
+            all_filenames,
+        )
+        assets = context.shared_image_store.get_assets(context.server_id, filenames)
+
+        start = (page - 1) * limit
+        items = []
+        for entry in entries[start:start + limit]:
+            item = {
+                'raw': build_item_raw(entry.item_key, entry.meta or 0),
+                'item_key': entry.item_key,
+                'meta': entry.meta,
+                'display_name': entry.display_name,
+                'icon': assets.get(entry.icon_file),
+            }
+            items.append(item)
+
+        return {
+            'total': len(entries),
+            'page': page,
+            'limit': limit,
+            'source': 'shared-image-db',
+            'items': items,
+        }
 
     @router.get('/itempanel/atlas')
     def itempanel_atlas_manifest():

@@ -793,6 +793,7 @@ test('renders the cleaned static workspace for admins', async () => {
   render(<App authUser={adminUser} onLogout={vi.fn()} />);
 
   expect(screen.getByRole('button', { name: 'Крафты' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Крафты — быстрый режим' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Черновики' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Техраздел' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Файлы' })).toBeTruthy();
