@@ -125,6 +125,43 @@
       font-size: .88rem;
     }
 
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-top: 24px;
+      padding: 6px;
+      background: #eaf0fb;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+    }
+
+    .tab-button {
+      flex: 1 1 0;
+      min-height: 46px;
+      padding: 9px 16px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: #5d6b81;
+      cursor: pointer;
+      font: inherit;
+      font-size: .94rem;
+      font-weight: 700;
+      transition: background .16s ease, box-shadow .16s ease, color .16s ease;
+    }
+
+    .tab-button:hover,
+    .tab-button:focus-visible {
+      color: #2a59bc;
+      outline: none;
+    }
+
+    .tab-button.active {
+      background: var(--surface);
+      color: #244f9f;
+      box-shadow: 0 3px 10px rgba(35, 54, 91, .1);
+    }
+
     .content {
       display: grid;
       gap: 22px;
@@ -434,6 +471,8 @@
     @media (max-width: 680px) {
       .page { width: min(100% - 20px, 1120px); padding-top: 30px; }
       .search-panel { top: 8px; }
+      .tabs { overflow-x: auto; }
+      .tab-button { flex: 0 0 auto; white-space: nowrap; }
       .content-layout { grid-template-columns: 1fr; gap: 14px; }
       .topic-panel { position: static; max-height: none; }
       .topic-tree { max-height: 320px; }
@@ -450,7 +489,7 @@
       <div>
         <p class="eyebrow">HiTech · справочник</p>
         <h1 id="page-title">Внутриигровые правила HiTech</h1>
-        <p class="intro">Актуальный текст правил в удобном формате для чтения. Поиск работает прямо в браузере и проверяет номера пунктов, формулировки, примечания и наказания.</p>
+        <p class="intro">Актуальный текст правил в удобном формате для чтения. Выберите нужную вкладку, а поиск проверит номера пунктов, формулировки, примечания и наказания.</p>
       </div>
       <div class="search-panel">
         <label class="search-label" for="search">Поиск по правилам</label>
@@ -458,6 +497,11 @@
         <p id="search-status" class="search-status" aria-live="polite"></p>
       </div>
     </section>
+
+    <nav id="rule-tabs" class="tabs" role="tablist" aria-label="Тип правил">
+      <button class="tab-button active" type="button" role="tab" aria-selected="true" data-tab-id="main">Основные правила</button>
+      <button class="tab-button" type="button" role="tab" aria-selected="false" data-tab-id="hitech">Внутриигровые правила</button>
+    </nav>
 
     <div class="content-layout">
       <aside class="topic-panel" aria-label="Навигация по тематикам правил">
@@ -471,7 +515,7 @@
         </nav>
       </aside>
 
-      <section id="content" class="content" aria-live="polite">
+      <section id="content" class="content" role="tabpanel" aria-live="polite">
         <div class="empty">Загрузка правил…</div>
       </section>
     </div>
@@ -483,8 +527,12 @@
     const content = document.querySelector('#content');
     const search = document.querySelector('#search');
     const status = document.querySelector('#search-status');
+    const pageTitle = document.querySelector('#page-title');
+    const tabList = document.querySelector('#rule-tabs');
     const topicTree = document.querySelector('#topic-tree');
     const topicPanelCount = document.querySelector('#topic-panel-count');
+    let tabs = [];
+    let activeTabId = '';
     let chapters = [];
 
     const normalize = value => String(value || '')
@@ -563,6 +611,40 @@
       }).join('');
     }
 
+    const ruleAnchor = rule => `${activeTabId}-${rule.name}`;
+
+    function renderTabs() {
+      tabList.innerHTML = tabs.map(tab => `
+        <button
+          class="tab-button${tab.id === activeTabId ? ' active' : ''}"
+          type="button"
+          role="tab"
+          aria-selected="${tab.id === activeTabId}"
+          data-tab-id="${escapeHtml(tab.id)}">
+          ${escapeHtml(tab.label)}
+        </button>`).join('');
+
+      tabList.querySelectorAll('[data-tab-id]').forEach(button => {
+        button.addEventListener('click', () => setActiveTab(button.dataset.tabId));
+      });
+    }
+
+    function setActiveTab(tabId, updateHash = true) {
+      const tab = tabs.find(item => item.id === tabId) || tabs[0];
+      if (!tab) return;
+
+      activeTabId = tab.id;
+      chapters = tab.chapters || [];
+      pageTitle.textContent = tab.title;
+      document.title = tab.title;
+      renderTabs();
+      render(search.value);
+
+      if (updateHash && window.location.hash !== `#${tab.id}`) {
+        history.replaceState(null, '', `#${tab.id}`);
+      }
+    }
+
     function filteredRules(chapter, normalizedQuery) {
       return (chapter.entries || []).filter(rule => !normalizedQuery || ruleSearchText(rule).includes(normalizedQuery));
     }
@@ -581,7 +663,7 @@
               <span class="tree-chapter-count">${rules.length}</span>
             </summary>
             <div class="tree-rules">
-              ${rules.map(rule => `<a class="tree-rule" href="#rule-${escapeHtml(rule.name)}">${highlight(rule.name, query)}</a>`).join('')}
+              ${rules.map(rule => `<a class="tree-rule" href="#rule-${escapeHtml(ruleAnchor(rule))}">${highlight(rule.name, query)}</a>`).join('')}
             </div>
           </details>`;
       }).join('');
@@ -603,13 +685,13 @@
     function render(query = '') {
       const normalizedQuery = normalize(query);
       let visibleRules = 0;
-      const html = chapters.map(chapter => {
+      const html = chapters.map((chapter, chapterIndex) => {
         const rules = filteredRules(chapter, normalizedQuery);
         visibleRules += rules.length;
         if (!rules.length) return '';
 
         return `
-          <article class="chapter" id="chapter-${chapters.indexOf(chapter)}">
+          <article class="chapter" id="chapter-${escapeHtml(activeTabId)}-${chapterIndex}">
             <header class="chapter-heading">
               <h2 class="chapter-title">${highlight(chapter.name, query)}</h2>
               <span class="chapter-count">${rules.length} ${rules.length === 1 ? 'правило' : 'правил'}</span>
@@ -617,7 +699,7 @@
             <div class="rules">
               ${rules.map(rule => {
                 return `
-                  <article class="rule" id="rule-${escapeHtml(rule.name)}">
+                  <article class="rule" id="rule-${escapeHtml(ruleAnchor(rule))}">
                     <div class="rule-number">${highlight(rule.name, query)}</div>
                     <div class="rule-text">
                       <div class="rule-description">${renderBlocks(rule.descriptions, query)}</div>
@@ -639,14 +721,32 @@
 
     search.addEventListener('input', event => render(event.target.value));
 
-    fetch('./rules.json')
-      .then(response => {
+    Promise.all([
+      fetch('./main-rules.json'),
+      fetch('./rules.json')
+    ])
+      .then(responses => Promise.all(responses.map(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
-      })
-      .then(data => {
-        chapters = data?.ru_ru?.chapters || [];
-        render(search.value);
+      })))
+      .then(([mainData, hitechData]) => {
+        tabs = [
+          {
+            id: 'main',
+            label: 'Основные правила',
+            title: 'Основные правила',
+            chapters: mainData?.ru_ru?.chapters || []
+          },
+          {
+            id: 'hitech',
+            label: 'Внутриигровые правила',
+            title: 'Внутриигровые правила HiTech',
+            chapters: hitechData?.ru_ru?.chapters || []
+          }
+        ];
+
+        const requestedTab = window.location.hash.slice(1);
+        setActiveTab(tabs.some(tab => tab.id === requestedTab) ? requestedTab : 'main', false);
       })
       .catch(error => {
         content.innerHTML = '<div class="error">Не удалось загрузить файл правил. Обновите страницу или проверьте, что рядом с index.html находится rules.json.</div>';
