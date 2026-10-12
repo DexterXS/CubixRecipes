@@ -206,11 +206,37 @@
       font-size: 1rem;
     }
 
+    .rule-description p + p,
+    .rule-block p + p {
+      margin-top: 11px;
+    }
+
+    .rule-description ul,
+    .rule-block ul {
+      margin: 8px 0 0;
+      padding-left: 1.35rem;
+    }
+
+    .rule-description li,
+    .rule-block li {
+      padding-left: .2rem;
+      overflow-wrap: anywhere;
+    }
+
+    .rule-description li + li,
+    .rule-block li + li {
+      margin-top: 8px;
+    }
+
     .rule-block {
       margin-top: 15px !important;
       padding: 11px 13px;
       border-radius: 10px;
       font-size: .93rem;
+    }
+
+    .rule-block p {
+      white-space: pre-wrap;
     }
 
     .rule-block strong {
@@ -323,6 +349,63 @@
 
     const joinParts = parts => Array.isArray(parts) ? parts.join(' ') : '';
 
+    const startsBullet = value => /^\s*[-•]\s*/.test(value);
+
+    const endsSentence = value => /[.!?;:)\]}»”'\"]\s*$/.test(value.trim());
+
+    function parseBlocks(parts) {
+      const blocks = [];
+      let paragraphParts = [];
+      let listItems = null;
+
+      const flushParagraph = () => {
+        if (paragraphParts.length) {
+          blocks.push({ type: 'paragraph', text: paragraphParts.join(' ') });
+          paragraphParts = [];
+        }
+      };
+
+      const flushList = () => {
+        if (listItems?.length) blocks.push({ type: 'list', items: listItems });
+        listItems = null;
+      };
+
+      for (const rawPart of (Array.isArray(parts) ? parts : [])) {
+        const part = String(rawPart || '').trim();
+        if (!part) continue;
+
+        if (startsBullet(part)) {
+          if (!listItems) {
+            flushParagraph();
+            listItems = [];
+          }
+          listItems.push(part.replace(/^\s*[-•]\s*/, '').trim());
+          continue;
+        }
+
+        if (listItems?.length && !endsSentence(listItems[listItems.length - 1])) {
+          listItems[listItems.length - 1] += ` ${part}`;
+          continue;
+        }
+
+        if (listItems) flushList();
+        paragraphParts.push(part);
+      }
+
+      flushList();
+      flushParagraph();
+      return blocks;
+    }
+
+    function renderBlocks(parts, query = '') {
+      return parseBlocks(parts).map(block => {
+        if (block.type === 'list') {
+          return `<ul>${block.items.map(item => `<li>${highlight(item, query)}</li>`).join('')}</ul>`;
+        }
+        return `<p>${highlight(block.text, query)}</p>`;
+      }).join('');
+    }
+
     function ruleSearchText(rule) {
       return normalize([
         rule.name,
@@ -348,16 +431,13 @@
             </header>
             <div class="rules">
               ${rules.map(rule => {
-                const description = joinParts(rule.descriptions);
-                const punishment = joinParts(rule.punishments);
-                const note = joinParts(rule.notes);
                 return `
                   <article class="rule" id="rule-${escapeHtml(rule.name)}">
                     <div class="rule-number">${highlight(rule.name, query)}</div>
                     <div class="rule-text">
-                      <p class="rule-description">${highlight(description, query)}</p>
-                      ${punishment ? `<p class="rule-block punishment"><strong>Наказание</strong>${highlight(punishment, query)}</p>` : ''}
-                      ${note ? `<p class="rule-block note"><strong>Примечание</strong>${highlight(note, query)}</p>` : ''}
+                      <div class="rule-description">${renderBlocks(rule.descriptions, query)}</div>
+                      ${rule.punishments?.length ? `<div class="rule-block punishment"><strong>Наказание</strong>${renderBlocks(rule.punishments, query)}</div>` : ''}
+                      ${rule.notes?.length ? `<div class="rule-block note"><strong>Примечание</strong>${renderBlocks(rule.notes, query)}</div>` : ''}
                     </div>
                   </article>`;
               }).join('')}
