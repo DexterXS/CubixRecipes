@@ -131,6 +131,145 @@
       margin-top: 28px;
     }
 
+    .content-layout {
+      display: grid;
+      grid-template-columns: minmax(220px, 270px) minmax(0, 1fr);
+      align-items: start;
+      gap: 22px;
+    }
+
+    .topic-panel {
+      position: sticky;
+      top: 14px;
+      max-height: calc(100vh - 28px);
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 5px 18px rgba(35, 54, 91, .035);
+    }
+
+    .topic-panel-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 17px 17px 4px;
+    }
+
+    .topic-panel-title {
+      color: #1c2940;
+      font-size: .96rem;
+      font-weight: 760;
+    }
+
+    .topic-panel-count {
+      color: var(--muted);
+      font-size: .76rem;
+      white-space: nowrap;
+    }
+
+    .topic-hint {
+      margin: 0;
+      padding: 0 17px 12px;
+      color: var(--muted);
+      font-size: .78rem;
+      line-height: 1.4;
+    }
+
+    .topic-tree {
+      max-height: calc(100vh - 112px);
+      overflow: auto;
+      padding: 0 9px 10px;
+      scrollbar-width: thin;
+    }
+
+    .tree-chapter {
+      border-top: 1px solid #eef1f5;
+    }
+
+    .tree-chapter summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 8px;
+      border-radius: 9px;
+      color: #2a3850;
+      cursor: pointer;
+      font-size: .86rem;
+      font-weight: 680;
+      list-style: none;
+    }
+
+    .tree-chapter summary::-webkit-details-marker { display: none; }
+
+    .tree-chapter summary::before {
+      flex: 0 0 auto;
+      color: var(--accent);
+      content: '›';
+      font-size: 1.2rem;
+      line-height: .8;
+      transition: transform .16s ease;
+    }
+
+    .tree-chapter[open] summary::before { transform: rotate(90deg); }
+
+    .tree-chapter summary:hover,
+    .tree-chapter summary:focus-visible {
+      background: var(--accent-soft);
+      outline: none;
+    }
+
+    .tree-chapter-name {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .tree-chapter-count {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: .72rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .tree-rules {
+      display: grid;
+      gap: 2px;
+      margin: 0 8px 10px 18px;
+      padding-left: 12px;
+      border-left: 1px solid var(--line-strong);
+    }
+
+    .tree-rule {
+      display: block;
+      padding: 5px 7px;
+      border-radius: 7px;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .75rem;
+      text-decoration: none;
+      transition: background .16s ease, color .16s ease;
+    }
+
+    .tree-rule:hover,
+    .tree-rule:focus-visible {
+      background: var(--accent-soft);
+      color: #2a59bc;
+      outline: none;
+    }
+
+    .tree-empty {
+      padding: 14px 8px 16px;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .chapter,
+    .rule {
+      scroll-margin-top: 112px;
+    }
+
     .chapter {
       overflow: hidden;
       background: var(--surface);
@@ -295,6 +434,9 @@
     @media (max-width: 680px) {
       .page { width: min(100% - 20px, 1120px); padding-top: 30px; }
       .search-panel { top: 8px; }
+      .content-layout { grid-template-columns: 1fr; gap: 14px; }
+      .topic-panel { position: static; max-height: none; }
+      .topic-tree { max-height: 320px; }
       .chapter-heading { align-items: flex-start; flex-direction: column; gap: 5px; padding: 17px 17px 15px; }
       .rule { grid-template-columns: 1fr; gap: 9px; padding: 18px 17px 20px; }
       .rule-number { font-size: .74rem; }
@@ -317,9 +459,22 @@
       </div>
     </section>
 
-    <section id="content" class="content" aria-live="polite">
-      <div class="empty">Загрузка правил…</div>
-    </section>
+    <div class="content-layout">
+      <aside class="topic-panel" aria-label="Навигация по тематикам правил">
+        <div class="topic-panel-heading">
+          <span class="topic-panel-title">Тематики правил</span>
+          <span id="topic-panel-count" class="topic-panel-count"></span>
+        </div>
+        <p class="topic-hint">Нажмите на раздел, чтобы увидеть его пункты.</p>
+        <nav id="topic-tree" class="topic-tree" aria-label="Дерево правил">
+          <div class="tree-empty">Загрузка разделов…</div>
+        </nav>
+      </aside>
+
+      <section id="content" class="content" aria-live="polite">
+        <div class="empty">Загрузка правил…</div>
+      </section>
+    </div>
 
     <footer>Только для чтения · поиск выполняется локально в браузере</footer>
   </main>
@@ -328,6 +483,8 @@
     const content = document.querySelector('#content');
     const search = document.querySelector('#search');
     const status = document.querySelector('#search-status');
+    const topicTree = document.querySelector('#topic-tree');
+    const topicPanelCount = document.querySelector('#topic-panel-count');
     let chapters = [];
 
     const normalize = value => String(value || '')
@@ -406,6 +563,34 @@
       }).join('');
     }
 
+    function filteredRules(chapter, normalizedQuery) {
+      return (chapter.entries || []).filter(rule => !normalizedQuery || ruleSearchText(rule).includes(normalizedQuery));
+    }
+
+    function renderTopicTree(query = '') {
+      const normalizedQuery = normalize(query);
+      const treeHtml = chapters.map((chapter, chapterIndex) => {
+        const rules = filteredRules(chapter, normalizedQuery);
+        if (!rules.length) return '';
+
+        const open = normalizedQuery || chapterIndex === 0 ? ' open' : '';
+        return `
+          <details class="tree-chapter"${open}>
+            <summary>
+              <span class="tree-chapter-name">${highlight(chapter.name, query)}</span>
+              <span class="tree-chapter-count">${rules.length}</span>
+            </summary>
+            <div class="tree-rules">
+              ${rules.map(rule => `<a class="tree-rule" href="#rule-${escapeHtml(rule.name)}">${highlight(rule.name, query)}</a>`).join('')}
+            </div>
+          </details>`;
+      }).join('');
+
+      topicTree.innerHTML = treeHtml || '<div class="tree-empty">Подходящих разделов нет.</div>';
+      const visibleRules = chapters.reduce((total, chapter) => total + filteredRules(chapter, normalizedQuery).length, 0);
+      topicPanelCount.textContent = `${chapters.length} · ${visibleRules}`;
+    }
+
     function ruleSearchText(rule) {
       return normalize([
         rule.name,
@@ -419,12 +604,12 @@
       const normalizedQuery = normalize(query);
       let visibleRules = 0;
       const html = chapters.map(chapter => {
-        const rules = (chapter.entries || []).filter(rule => !normalizedQuery || ruleSearchText(rule).includes(normalizedQuery));
+        const rules = filteredRules(chapter, normalizedQuery);
         visibleRules += rules.length;
         if (!rules.length) return '';
 
         return `
-          <article class="chapter">
+          <article class="chapter" id="chapter-${chapters.indexOf(chapter)}">
             <header class="chapter-heading">
               <h2 class="chapter-title">${highlight(chapter.name, query)}</h2>
               <span class="chapter-count">${rules.length} ${rules.length === 1 ? 'правило' : 'правил'}</span>
@@ -446,6 +631,7 @@
       }).join('');
 
       content.innerHTML = html || '<div class="empty">По этому запросу ничего не найдено.</div>';
+      renderTopicTree(query);
       status.textContent = normalizedQuery
         ? `Найдено правил: ${visibleRules} из ${chapters.reduce((total, chapter) => total + (chapter.entries || []).length, 0)}`
         : `Разделов: ${chapters.length} · правил: ${visibleRules}`;
